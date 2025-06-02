@@ -10,20 +10,26 @@ interface ProgressIndicatorProps {
 export default function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicatorProps) {
   return (
     <div className="flex justify-center">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-1">
         {Array.from({ length: totalSteps }, (_, index) => {
           const step = index + 1
           return (
             <div key={step} className="flex items-center">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                  step <= currentStep ? "bg-brand-primary text-white" : "bg-surface-divider text-text-secondary"
+                className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                  step < currentStep 
+                    ? "bg-brand-primary text-white" 
+                    : step === currentStep
+                    ? "border-2 border-brand-primary bg-transparent"
+                    : "border-2 border-brand-primary/80 bg-transparent opacity-50"
                 }`}
               >
-                {step < currentStep ? <Check className="w-4 h-4" /> : step}
+                {step < currentStep ? (
+                  <Check className="w-3 h-3" />
+                ) : null}
               </div>
               {step < totalSteps && (
-                <div className={`w-8 h-0.5 ${step < currentStep ? "bg-brand-primary" : "bg-surface-divider"}`} />
+                <div className={`w-6 h-0.5 mx-1 ${step < currentStep ? "bg-brand-primary" : "bg-brand-primary/80"}`} />
               )}
             </div>
           )

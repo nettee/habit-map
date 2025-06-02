@@ -62,10 +62,10 @@ export default function SetBehaviorReminders({
         onClick: onPrev,
       }}
       rightButton={{
-        text: "完成创建",
+        text: "创建习惯",
         icon: <Check className="w-4 h-4 mr-2" />,
         onClick: onComplete,
-        className: "bg-brand-accent hover:bg-brand-accent/80 text-white",
+        className: "bg-brand-primary hover:bg-brand-primary/80 text-white",
       }}
     >
       <div className="space-y-6">

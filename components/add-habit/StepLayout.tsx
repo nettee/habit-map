@@ -42,27 +42,27 @@ export default function StepLayout({
       {/* 顶部固定区域：进度指示器和标题 */}
       <div className="flex-shrink-0 p-4 pb-0">
         {/* 进度指示器 */}
-        <div className="mb-6">
+        <div className="mb-4">
           <ProgressIndicator currentStep={stepNumber} totalSteps={totalSteps} />
         </div>
 
-        {/* 步骤标题 */}
-        <div className="text-center mb-4">
-          <h1 className="text-xl font-bold text-text-primary mb-2">创建新习惯</h1>
-          <p className="text-sm text-text-secondary">第{stepNumber}步：{stepTitle}</p>
+        {/* 步骤信息和标题 */}
+        <div className="text-center mb-6">
+          <p className="text-xs text-text-secondary mb-2">第 {stepNumber} 步，共 {totalSteps} 步 · 设计新习惯</p>
+          <h1 className="text-2xl font-bold text-text-primary">{stepTitle}</h1>
         </div>
       </div>
 
       {/* 固定内容区域（可选） */}
       {fixedContent && (
-        <div className="flex-shrink-0 px-4 mb-4">
+        <div className="flex-shrink-0 p-4 pb-0">
           {fixedContent}
         </div>
       )}
 
       {/* 中间区域：内容 */}
       {needsScroll ? (
-        <div className="flex-1 relative mb-4 min-h-0 px-4">
+        <div className="flex-1 relative min-h-0 p-4 pb-0">
           {/* 滚动容器 */}
           <div className="h-full overflow-y-auto scrollbar-hide">
             <div className="pt-2 pb-2">
@@ -71,13 +71,13 @@ export default function StepLayout({
           </div>
         </div>
       ) : (
-        <div className="flex-1 min-h-0 py-4 px-4">
+        <div className="flex-1 min-h-0 p-4 pb-0">
           {children}
         </div>
       )}
 
       {/* 底部固定区域：按钮 */}
-      <div className="flex-shrink-0 flex justify-between pt-4 px-4 border-t border-surface-divider">
+      <div className="flex-shrink-0 flex justify-between p-4 border-t border-surface-divider">
         <Button
           variant={leftButton.variant || "ghost"}
           onClick={leftButton.onClick}

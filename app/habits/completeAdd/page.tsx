@@ -118,7 +118,7 @@ export default function CompleteAddPage() {
 
             <div className="flex items-center mt-4 mb-2">
               <Sparkles className="w-5 h-5 mr-2 text-brand-accent" />
-              <h2 className="text-lg font-bold text-text-primary">你的微行动计划</h2>
+              <h2 className="text-lg font-bold text-text-primary">你的微行为计划</h2>
             </div>
           </CardHeader>
 

@@ -28,7 +28,7 @@ export default function SelectBehaviors({
     return (
       <StepLayout
         stepNumber={2}
-        stepTitle="设计你的微行动"
+        stepTitle="设计你的微行为"
         needsScroll={false}
         fixedContent={
           <Card className="border-surface-divider bg-surface-main">
@@ -65,7 +65,7 @@ export default function SelectBehaviors({
   return (
     <StepLayout
       stepNumber={2}
-      stepTitle="设计你的微行动"
+      stepTitle="设计你的微行为"
       needsScroll={true}
       fixedContent={
         <div className="space-y-4">

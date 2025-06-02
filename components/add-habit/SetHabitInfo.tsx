@@ -56,14 +56,14 @@ export default function SetHabitInfo({
 
         <div>
           <Label htmlFor="habit-description" className="text-text-primary font-medium">
-            习惯描述 (可选)
+            习惯说明 (可选)
           </Label>
           <Textarea
             id="habit-description"
             value={habitDescription}
             onChange={(e) => setHabitDescription(e.target.value)}
             placeholder="我为什么想养成这个习惯？它对我有什么意义？"
-            className="mt-2 border-surface-divider focus:border-brand-primary min-h-[100px]"
+            className="mt-2 border-surface-divider focus:border-brand-primary min-h-64"
           />
         </div>
       </div>
