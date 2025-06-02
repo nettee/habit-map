@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
@@ -7,28 +8,33 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, ArrowUp, ArrowDown, Check, Clock, Link } from "lucide-react"
 import { MicroBehavior, AnchorOption, ReminderSettings } from "./types"
 import StepLayout from "./StepLayout"
+import { useHabitWizard } from "@/app/habits/add/HabitWizardContext"
 
-interface SetBehaviorRemindersProps {
-  selectedMicroBehaviors: MicroBehavior[]
-  reminderSettings: ReminderSettings
-  setReminderSettings: (settings: ReminderSettings | ((prev: ReminderSettings) => ReminderSettings)) => void
-  anchorOptions: AnchorOption[]
-  expandedCards: { [key: string]: boolean }
-  onToggleCardExpanded: (behaviorId: string) => void
-  onComplete: () => void
-  onPrev: () => void
-}
+export default function SetBehaviorReminders() {
+  const router = useRouter()
+  const {
+    selectedMicroBehaviors,
+    reminderSettings,
+    setReminderSettings,
+    expandedCards,
+    toggleCardExpanded,
+    complete,
+  } = useHabitWizard()
 
-export default function SetBehaviorReminders({
-  selectedMicroBehaviors,
-  reminderSettings,
-  setReminderSettings,
-  anchorOptions,
-  expandedCards,
-  onToggleCardExpanded,
-  onComplete,
-  onPrev,
-}: SetBehaviorRemindersProps) {
+  // 静态的锚点选项数据
+  const anchorOptions: AnchorOption[] = [
+    { id: "morning-brush", label: "早上刷牙后", description: "利用晨间例行公事" },
+    { id: "coffee", label: "喝咖啡/茶时", description: "与日常饮品习惯结合" },
+    { id: "lunch-break", label: "午休时间", description: "利用工作间隙" },
+    { id: "before-sleep", label: "睡前", description: "作为放松活动" },
+    { id: "commute", label: "通勤路上", description: "利用交通时间" },
+  ]
+
+  const handlePrev = () => {
+    // 使用路由导航到第二步
+    router.push('/habits/add/step2')
+  }
+
   const getReminderDisplayText = (behaviorId: string) => {
     const setting = reminderSettings[behaviorId]
     if (!setting || !setting.type) {
@@ -59,12 +65,12 @@ export default function SetBehaviorReminders({
       leftButton={{
         text: "上一步",
         icon: <ArrowLeft className="w-4 h-4 mr-2" />,
-        onClick: onPrev,
+        onClick: handlePrev,
       }}
       rightButton={{
         text: "创建习惯",
         icon: <Check className="w-4 h-4 mr-2" />,
-        onClick: onComplete,
+        onClick: complete,
         className: "bg-brand-primary hover:bg-brand-primary/80 text-white",
       }}
     >
@@ -78,7 +84,7 @@ export default function SetBehaviorReminders({
                 <>
                   <CardHeader
                     className="pb-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                    onClick={() => onToggleCardExpanded(behavior.id)}
+                    onClick={() => toggleCardExpanded(behavior.id)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
@@ -201,7 +207,7 @@ export default function SetBehaviorReminders({
                 // 收起状态 - 简略只读信息
                 <CardContent
                   className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                  onClick={() => onToggleCardExpanded(behavior.id)}
+                  onClick={() => toggleCardExpanded(behavior.id)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">

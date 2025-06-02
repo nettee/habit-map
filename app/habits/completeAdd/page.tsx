@@ -36,6 +36,10 @@ export default function CompleteAddPage() {
     if (storedData) {
       setHabitData(JSON.parse(storedData))
     }
+    
+    // 清理习惯向导的状态，确保下次进入 /habits/add 时是全新状态
+    localStorage.removeItem("habitWizardState")
+    console.log("[DEBUG] 在 completeAdd 页面清理了 habitWizardState")
   }, [])
 
   const getReminderText = (behaviorId: string) => {

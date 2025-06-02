@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
@@ -9,20 +10,17 @@ import { ArrowLeft, ArrowRight, AlertCircle, RotateCcw } from "lucide-react"
 import { MicroBehavior } from "./types"
 import { getBehaviorSuggestions } from "@/lib/behavior-suggestion"
 import StepLayout from "./StepLayout"
+import { useHabitWizard } from "@/app/habits/add/HabitWizardContext"
 
-interface SelectBehaviorsProps {
-  habitName: string
-  habitDescription: string
-  onNext: (selectedBehaviors: MicroBehavior[]) => void
-  onPrev: () => void
-}
+export default function SelectBehaviors() {
+  const router = useRouter()
+  const {
+    habitName,
+    habitDescription,
+    selectedMicroBehaviors: contextSelectedBehaviors,
+    selectBehaviors,
+  } = useHabitWizard()
 
-export default function SelectBehaviors({
-  habitName,
-  habitDescription,
-  onNext,
-  onPrev,
-}: SelectBehaviorsProps) {
   const [selectedMicroBehaviors, setSelectedMicroBehaviors] = useState<MicroBehavior[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string>("")
@@ -48,6 +46,13 @@ export default function SelectBehaviors({
     fetchBehaviorSuggestions()
   }, [habitName, habitDescription])
 
+  // 如果 Context 中有已选择的微行为，恢复状态
+  useEffect(() => {
+    if (contextSelectedBehaviors.length > 0) {
+      setSelectedMicroBehaviors(contextSelectedBehaviors)
+    }
+  }, [contextSelectedBehaviors])
+
   const handleMicroBehaviorToggle = (behaviorId: string) => {
     const selectedCount = selectedMicroBehaviors.filter((b) => b.selected).length
     const behavior = selectedMicroBehaviors.find((b) => b.id === behaviorId)
@@ -67,7 +72,15 @@ export default function SelectBehaviors({
     if (selectedCount === 0) {
       return
     }
-    onNext(selectedMicroBehaviors)
+    // 使用 Context 的 selectBehaviors 方法保存选择的微行为
+    selectBehaviors(selectedMicroBehaviors)
+    // 使用路由导航到第三步
+    router.push('/habits/add/step3')
+  }
+
+  const handlePrev = () => {
+    // 使用路由导航到第一步
+    router.push('/habits/add/step1')
   }
 
   const handleRetry = () => {
@@ -91,7 +104,7 @@ export default function SelectBehaviors({
         leftButton={{
           text: "上一步",
           icon: <ArrowLeft className="w-4 h-4 mr-2" />,
-          onClick: onPrev,
+          onClick: handlePrev,
         }}
         rightButton={{
           text: "下一步",
@@ -130,7 +143,7 @@ export default function SelectBehaviors({
         leftButton={{
           text: "上一步",
           icon: <ArrowLeft className="w-4 h-4 mr-2" />,
-          onClick: onPrev,
+          onClick: handlePrev,
         }}
         rightButton={{
           text: "重试",
@@ -190,7 +203,7 @@ export default function SelectBehaviors({
       leftButton={{
         text: "上一步",
         icon: <ArrowLeft className="w-4 h-4 mr-2" />,
-        onClick: onPrev,
+        onClick: handlePrev,
       }}
       rightButton={{
         text: "下一步",

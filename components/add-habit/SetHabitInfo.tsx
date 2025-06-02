@@ -1,28 +1,28 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import StepLayout from "./StepLayout"
+import { useHabitWizard } from "@/app/habits/add/HabitWizardContext"
 
 interface SetHabitInfoProps {
-  habitName: string
-  setHabitName: (name: string) => void
-  habitDescription: string
-  setHabitDescription: (description: string) => void
-  onNext: () => void
   onCancel: () => void
 }
 
 export default function SetHabitInfo({
-  habitName,
-  setHabitName,
-  habitDescription,
-  setHabitDescription,
-  onNext,
   onCancel,
 }: SetHabitInfoProps) {
+  const router = useRouter()
+  const { habitName, setHabitName, habitDescription, setHabitDescription } = useHabitWizard()
+
+  const handleNext = () => {
+    // 使用路由导航到第二步
+    router.push('/habits/add/step2')
+  }
+
   return (
     <StepLayout
       stepNumber={1}
@@ -36,7 +36,7 @@ export default function SetHabitInfo({
       rightButton={{
         text: "下一步",
         icon: <ArrowRight className="w-4 h-4 ml-2" />,
-        onClick: onNext,
+        onClick: handleNext,
         disabled: !habitName.trim(),
       }}
     >
