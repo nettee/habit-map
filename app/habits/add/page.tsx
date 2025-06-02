@@ -214,8 +214,8 @@ export default function AddHabitPage() {
         </div>
 
         {/* 步骤内容 */}
-        <Card className="border-surface-divider shadow-sm">
-          <CardContent className="p-6">
+        <Card className="border-surface-divider shadow-sm h-[calc(100vh-8rem)]">
+          <CardContent className="p-6 h-full">
             {currentStep === 1 && (
               <SetHabitInfo
                 habitName={habitName}

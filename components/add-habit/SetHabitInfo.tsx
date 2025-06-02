@@ -1,10 +1,10 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, ArrowRight } from "lucide-react"
+import StepLayout from "./StepLayout"
 
 interface SetHabitInfoProps {
   habitName: string
@@ -24,12 +24,22 @@ export default function SetHabitInfo({
   onCancel,
 }: SetHabitInfoProps) {
   return (
-    <div className="space-y-6">
-      <div className="text-center mb-6">
-        <h1 className="text-xl font-bold text-text-primary mb-2">创建新习惯</h1>
-        <p className="text-sm text-text-secondary">第1步：定义你的习惯</p>
-      </div>
-
+    <StepLayout
+      stepNumber={1}
+      stepTitle="定义你的习惯"
+      needsScroll={false}
+      leftButton={{
+        text: "取消",
+        icon: <ArrowLeft className="w-4 h-4 mr-2" />,
+        onClick: onCancel,
+      }}
+      rightButton={{
+        text: "下一步",
+        icon: <ArrowRight className="w-4 h-4 ml-2" />,
+        onClick: onNext,
+        disabled: !habitName.trim(),
+      }}
+    >
       <div className="space-y-4">
         <div>
           <Label htmlFor="habit-name" className="text-text-primary font-medium">
@@ -57,21 +67,6 @@ export default function SetHabitInfo({
           />
         </div>
       </div>
-
-      <div className="flex justify-between pt-4">
-        <Button variant="ghost" className="text-text-secondary" onClick={onCancel}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          取消
-        </Button>
-        <Button
-          onClick={onNext}
-          disabled={!habitName.trim()}
-          className="bg-brand-primary hover:bg-brand-primary/80 text-white"
-        >
-          下一步
-          <ArrowRight className="w-4 h-4 ml-2" />
-        </Button>
-      </div>
-    </div>
+    </StepLayout>
   )
 }

@@ -1,12 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, ArrowUp, ArrowDown, Check, Clock, Link } from "lucide-react"
 import { MicroBehavior, AnchorOption, ReminderSettings } from "./types"
+import StepLayout from "./StepLayout"
 
 interface SetBehaviorRemindersProps {
   selectedMicroBehaviors: MicroBehavior[]
@@ -52,12 +52,22 @@ export default function SetBehaviorReminders({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="text-center mb-6">
-        <h1 className="text-xl font-bold text-text-primary mb-2">创建新习惯</h1>
-        <p className="text-sm text-text-secondary">第3步：设置提醒</p>
-      </div>
-
+    <StepLayout
+      stepNumber={3}
+      stepTitle="设置提醒"
+      needsScroll={true}
+      leftButton={{
+        text: "上一步",
+        icon: <ArrowLeft className="w-4 h-4 mr-2" />,
+        onClick: onPrev,
+      }}
+      rightButton={{
+        text: "完成创建",
+        icon: <Check className="w-4 h-4 mr-2" />,
+        onClick: onComplete,
+        className: "bg-brand-accent hover:bg-brand-accent/80 text-white",
+      }}
+    >
       <div className="space-y-6">
         {selectedMicroBehaviors
           .filter((behavior) => behavior.selected)
@@ -217,17 +227,6 @@ export default function SetBehaviorReminders({
             </Card>
           ))}
       </div>
-
-      <div className="flex justify-between pt-4">
-        <Button variant="ghost" onClick={onPrev} className="text-text-secondary">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          上一步
-        </Button>
-        <Button onClick={onComplete} className="bg-brand-accent hover:bg-brand-accent/80 text-white">
-          <Check className="w-4 h-4 mr-2" />
-          完成创建
-        </Button>
-      </div>
-    </div>
+    </StepLayout>
   )
 }
