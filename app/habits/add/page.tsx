@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, ArrowRight, Check, Clock, Link, ArrowUp, ArrowDown, Sparkles, Heart, Target } from "lucide-react"
+import { ArrowLeft, ArrowRight, Check, Clock, Link, ArrowUp, ArrowDown } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
@@ -176,9 +176,6 @@ export default function AddHabitPage() {
       setExpandedCards(initialExpandedState)
       setReminderSettings(initialReminderSettings)
       setCurrentStep(3)
-    } else if (currentStep === 3) {
-      // 完成创建，进入第4步（完成页面）
-      setCurrentStep(4)
     }
   }
 
@@ -187,8 +184,21 @@ export default function AddHabitPage() {
   }
 
   const handleComplete = () => {
-    // 导航到习惯列表页或今日行动页
-    window.location.href = "/habits"
+    // 这里处理完成创建的逻辑
+    const habitData = {
+      habitName,
+      habitDescription,
+      selectedMicroBehaviors: selectedMicroBehaviors.filter((b) => b.selected),
+      reminderSettings,
+    }
+
+    console.log("创建习惯:", habitData)
+
+    // 将数据存储到 localStorage 或通过其他方式传递给下一个页面
+    localStorage.setItem("newHabitData", JSON.stringify(habitData))
+
+    // 导航到完成页面
+    window.location.href = "/habits/completeAdd"
   }
 
   const toggleCardExpanded = (behaviorId: string) => {
@@ -196,28 +206,6 @@ export default function AddHabitPage() {
       ...prev,
       [behaviorId]: !prev[behaviorId],
     }))
-  }
-
-  const getReminderText = (behaviorId: string) => {
-    const setting = reminderSettings[behaviorId]
-    if (!setting || !setting.type) {
-      return "未设置提醒"
-    }
-
-    if (setting.type === "anchor") {
-      if (setting.anchor) {
-        const anchorOption = anchorOptions.find((option) => option.id === setting.anchor)
-        return `${anchorOption?.label || "未知锚点"}`
-      }
-      return "自然提醒（未选择锚点）"
-    } else if (setting.type === "timer") {
-      if (setting.time) {
-        return `每天 ${setting.time}`
-      }
-      return "定时提醒（未选择时间）"
-    }
-
-    return "未设置提醒"
   }
 
   const renderStep1 = () => (
@@ -558,7 +546,7 @@ export default function AddHabitPage() {
           <ArrowLeft className="w-4 h-4 mr-2" />
           上一步
         </Button>
-        <Button onClick={handleNextStep} className="bg-brand-accent hover:bg-brand-accent/80 text-white">
+        <Button onClick={handleComplete} className="bg-brand-accent hover:bg-brand-accent/80 text-white">
           <Check className="w-4 h-4 mr-2" />
           完成创建
         </Button>
@@ -566,129 +554,36 @@ export default function AddHabitPage() {
     </div>
   )
 
-  const renderStep4 = () => (
-    <div className="space-y-6">
-      {/* 成功标识 */}
-      <div className="text-center mb-6">
-        <div className="relative mx-auto w-16 h-16 mb-4">
-          <div className="absolute inset-0 bg-brand-primary rounded-full flex items-center justify-center">
-            <Check className="w-8 h-8 text-white" />
-          </div>
-          <div className="absolute -top-2 -right-2">
-            <Sparkles className="w-6 h-6 text-brand-accent" />
-          </div>
-        </div>
-
-        <h1 className="text-xl font-bold text-text-primary mb-1">🎉 太棒了！</h1>
-        <p className="text-text-secondary mb-1">你的新习惯已经创建成功</p>
-        <p className="text-sm text-brand-secondary flex items-center justify-center">
-          <Heart className="w-4 h-4 mr-1" />
-          每一个小行动都是改变的开始
-        </p>
-      </div>
-
-      {/* 习惯信息和微行为计划合并卡片 */}
-      <Card className="border-brand-primary border-2 mb-6 bg-gradient-to-br from-white to-surface-main">
-        <CardHeader className="pb-3">
-          <div className="flex items-center mb-2">
-            <Target className="w-5 h-5 text-brand-primary mr-2" />
-            <CardTitle className="text-lg text-text-primary">你的新习惯</CardTitle>
-          </div>
-          <div>
-            <h3 className="font-bold text-text-primary text-lg mb-2">{habitName}</h3>
-            {habitDescription && <p className="text-text-secondary text-sm leading-relaxed mb-4">{habitDescription}</p>}
-          </div>
-
-          <div className="flex items-center mt-4 mb-2">
-            <Sparkles className="w-5 h-5 mr-2 text-brand-accent" />
-            <h2 className="text-lg font-bold text-text-primary">你的微行动计划</h2>
-          </div>
-        </CardHeader>
-
-        <CardContent className="pt-0 space-y-2">
-          {selectedMicroBehaviors
-            .filter((behavior) => behavior.selected)
-            .map((behavior, index) => (
-              <div key={behavior.id} className="bg-gray-50/80 rounded-lg p-2.5">
-                <div className="flex items-start space-x-2.5">
-                  <div className="flex-shrink-0 w-4 h-4 bg-brand-primary rounded-full flex items-center justify-center text-white text-xs font-medium">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-medium text-text-primary mb-1 text-sm">{behavior.title}</h4>
-                    <p className="text-xs text-text-secondary mb-1.5">{behavior.description}</p>
-
-                    <div className="flex items-center text-xs">
-                      <span className="text-text-secondary mr-1.5">📅 提醒方式:</span>
-                      <span className="text-brand-primary font-medium">{getReminderText(behavior.id)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-        </CardContent>
-      </Card>
-
-      {/* 鼓励文案 */}
-      <Card className="border-brand-accent bg-gradient-to-r from-brand-accent/10 to-brand-primary/10 mb-6">
-        <CardContent className="p-3 text-center">
-          <p className="text-text-primary font-medium mb-2 text-sm">✨ 记住福格行为模型的秘诀</p>
-          <p className="text-sm text-text-secondary leading-relaxed">
-            从小事开始，利用现有习惯作为提醒，持续的小行动会带来巨大的改变！
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* 完成按钮 */}
-      <Button
-        onClick={handleComplete}
-        className="w-full bg-brand-primary hover:bg-brand-primary/80 text-white py-2 text-lg font-medium"
-      >
-        开始我的习惯之旅 🚀
-      </Button>
-
-      {/* 底部提示 */}
-      <p className="text-center text-xs text-text-secondary mt-4">你可以随时在习惯列表中查看和调整你的微行为</p>
-    </div>
-  )
-
   return (
     <div className="min-h-screen bg-surface-main p-4">
       <div className="max-w-md mx-auto">
-        {/* 进度指示器 - 只在前3步显示 */}
-        {currentStep <= 3 && (
-          <div className="flex justify-center mb-6">
-            <div className="flex items-center space-x-2">
-              {[1, 2, 3].map((step) => (
-                <div key={step} className="flex items-center">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                      step <= currentStep ? "bg-brand-primary text-white" : "bg-surface-divider text-text-secondary"
-                    }`}
-                  >
-                    {step < currentStep ? <Check className="w-4 h-4" /> : step}
-                  </div>
-                  {step < 3 && <div className={`w-8 h-0.5 ${step < currentStep ? "bg-brand-primary" : "bg-surface-divider"}`} />}
+        {/* 进度指示器 */}
+        <div className="flex justify-center mb-6">
+          <div className="flex items-center space-x-2">
+            {[1, 2, 3].map((step) => (
+              <div key={step} className="flex items-center">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    step <= currentStep ? "bg-brand-primary text-white" : "bg-surface-divider text-text-secondary"
+                  }`}
+                >
+                  {step < currentStep ? <Check className="w-4 h-4" /> : step}
                 </div>
-              ))}
-            </div>
+                {step < 3 && <div className={`w-8 h-0.5 ${step < currentStep ? "bg-brand-primary" : "bg-surface-divider"}`} />}
+              </div>
+            ))}
           </div>
-        )}
+        </div>
 
         {/* 步骤内容 */}
-        {currentStep <= 3 ? (
-          <Card className="border-surface-divider shadow-sm">
-            <CardContent className="p-6">
-              {currentStep === 1 && renderStep1()}
-              {currentStep === 2 && isLoadingRecommendations && renderLoadingStep2()}
-              {currentStep === 2 && !isLoadingRecommendations && renderStep2()}
-              {currentStep === 3 && renderStep3()}
-            </CardContent>
-          </Card>
-        ) : (
-          // 第4步不需要卡片包装，直接渲染内容
-          renderStep4()
-        )}
+        <Card className="border-surface-divider shadow-sm">
+          <CardContent className="p-6">
+            {currentStep === 1 && renderStep1()}
+            {currentStep === 2 && isLoadingRecommendations && renderLoadingStep2()}
+            {currentStep === 2 && !isLoadingRecommendations && renderStep2()}
+            {currentStep === 3 && renderStep3()}
+          </CardContent>
+        </Card>
         <Toaster />
       </div>
     </div>

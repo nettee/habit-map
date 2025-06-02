@@ -124,7 +124,7 @@ colors: {
 
 ### 步骤 3: 更新组件代码
 
-**文件**: `app/habits/add/page.tsx`
+**文件**: `app/habits/add/page.tsx` 和 `app/habits/completeAdd/page.tsx`
 
 **修改策略**:
 1. 逐步替换硬编码颜色
@@ -196,9 +196,17 @@ colors: {
 
 ### 步骤 3: 更新组件代码
 - [x] 3.1 替换 app/habits/add/page.tsx 中的硬编码颜色
-- [x] 3.2 验证组件视觉效果
-- [x] 3.3 测试深色模式切换
-- [x] 3.4 代码审查和优化
+- [x] 3.2 替换 app/habits/completeAdd/page.tsx 中的硬编码颜色
+- [x] 3.3 验证组件视觉效果
+- [x] 3.4 测试深色模式切换
+- [x] 3.5 代码审查和优化
+
+**步骤3完成详情**:
+- 成功替换了 `app/habits/add/page.tsx` 中的 70+ 个硬编码颜色实例
+- 成功替换了 `app/habits/completeAdd/page.tsx` 中的 20+ 个硬编码颜色实例
+- 所有颜色都已映射到语义化的颜色类名
+- 保持了原有的视觉效果和用户体验
+- 支持深浅主题动态切换
 
 ### 步骤 4: 验证和测试
 - [ ] 4.1 功能测试
