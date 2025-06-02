@@ -223,13 +223,13 @@ export default function AddHabitPage() {
   const renderStep1 = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold text-[#292F36] mb-2">创建新习惯</h1>
-        <p className="text-sm text-[#5A6872]">第1步：定义你的习惯</p>
+        <h1 className="text-xl font-bold text-text-primary mb-2">创建新习惯</h1>
+        <p className="text-sm text-text-secondary">第1步：定义你的习惯</p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <Label htmlFor="habit-name" className="text-[#292F36] font-medium">
+          <Label htmlFor="habit-name" className="text-text-primary font-medium">
             习惯名称
           </Label>
           <Input
@@ -237,12 +237,12 @@ export default function AddHabitPage() {
             value={habitName}
             onChange={(e) => setHabitName(e.target.value)}
             placeholder="我想养成的好习惯是..."
-            className="mt-2 border-[#D8DEE9] focus:border-[#69B578]"
+            className="mt-2 border-surface-divider focus:border-brand-primary"
           />
         </div>
 
         <div>
-          <Label htmlFor="habit-description" className="text-[#292F36] font-medium">
+          <Label htmlFor="habit-description" className="text-text-primary font-medium">
             习惯描述 (可选)
           </Label>
           <Textarea
@@ -250,20 +250,20 @@ export default function AddHabitPage() {
             value={habitDescription}
             onChange={(e) => setHabitDescription(e.target.value)}
             placeholder="我为什么想养成这个习惯？它对我有什么意义？"
-            className="mt-2 border-[#D8DEE9] focus:border-[#69B578] min-h-[100px]"
+            className="mt-2 border-surface-divider focus:border-brand-primary min-h-[100px]"
           />
         </div>
       </div>
 
       <div className="flex justify-between pt-4">
-        <Button variant="ghost" className="text-[#5A6872]" onClick={() => window.history.back()}>
+        <Button variant="ghost" className="text-text-secondary" onClick={() => window.history.back()}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           取消
         </Button>
         <Button
           onClick={handleNextStep}
           disabled={!habitName.trim()}
-          className="bg-[#69B578] hover:bg-[#5a9a68] text-white"
+          className="bg-brand-primary hover:bg-brand-primary/80 text-white"
         >
           下一步
           <ArrowRight className="w-4 h-4 ml-2" />
@@ -275,21 +275,21 @@ export default function AddHabitPage() {
   const renderLoadingStep2 = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold text-[#292F36] mb-2">创建新习惯</h1>
-        <p className="text-sm text-[#5A6872]">第2步：设计你的微行动</p>
+        <h1 className="text-xl font-bold text-text-primary mb-2">创建新习惯</h1>
+        <p className="text-sm text-text-secondary">第2步：设计你的微行动</p>
       </div>
 
-      <Card className="border-[#D8DEE9] bg-[#EBF2FA]">
+      <Card className="border-surface-divider bg-surface-main">
         <CardContent className="p-4">
-          <p className="text-sm text-[#5A6872]">习惯：</p>
-          <p className="font-medium text-[#292F36]">{habitName}</p>
+          <p className="text-sm text-text-secondary">习惯：</p>
+          <p className="font-medium text-text-primary">{habitName}</p>
         </CardContent>
       </Card>
 
       <div className="flex flex-col items-center justify-center py-16">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#69B578] mb-6"></div>
-        <h3 className="text-lg font-medium text-[#292F36] mb-2">正在为您推荐微行为...</h3>
-        <p className="text-sm text-[#5A6872] text-center leading-relaxed">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mb-6"></div>
+        <h3 className="text-lg font-medium text-text-primary mb-2">正在为您推荐微行为...</h3>
+        <p className="text-sm text-text-secondary text-center leading-relaxed">
           基于您的习惯目标，我们正在分析并推荐
           <br />
           最适合的微行为组合
@@ -301,29 +301,29 @@ export default function AddHabitPage() {
   const renderStep2 = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold text-[#292F36] mb-2">创建新习惯</h1>
-        <p className="text-sm text-[#5A6872]">第2步：设计你的微行动</p>
+        <h1 className="text-xl font-bold text-text-primary mb-2">创建新习惯</h1>
+        <p className="text-sm text-text-secondary">第2步：设计你的微行动</p>
       </div>
 
-      <Card className="border-[#D8DEE9] bg-[#EBF2FA]">
+      <Card className="border-surface-divider bg-surface-main">
         <CardContent className="p-4">
-          <p className="text-sm text-[#5A6872]">习惯：</p>
-          <p className="font-medium text-[#292F36]">{habitName}</p>
+          <p className="text-sm text-text-secondary">习惯：</p>
+          <p className="font-medium text-text-primary">{habitName}</p>
         </CardContent>
       </Card>
 
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-medium text-[#292F36]">推荐的微行为</h3>
-          <span className="text-sm text-[#5A6872]">
+          <h3 className="font-medium text-text-primary">推荐的微行为</h3>
+          <span className="text-sm text-text-secondary">
             已选择 {selectedMicroBehaviors.filter((b) => b.selected).length}/3
           </span>
         </div>
-        <p className="text-sm text-[#5A6872] mb-4">选择1-3个简单易行的微行为，让习惯更容易坚持</p>
+        <p className="text-sm text-text-secondary mb-4">选择1-3个简单易行的微行为，让习惯更容易坚持</p>
 
         <div className="space-y-3">
           {selectedMicroBehaviors.map((behavior) => (
-            <Card key={behavior.id} className="border-[#D8DEE9]">
+            <Card key={behavior.id} className="border-surface-divider">
               <CardContent
                 className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => handleMicroBehaviorToggle(behavior.id)}
@@ -338,11 +338,11 @@ export default function AddHabitPage() {
                   <div className="flex-1">
                     <Label
                       htmlFor={behavior.id}
-                      className="font-medium cursor-pointer text-[#292F36] pointer-events-none"
+                      className="font-medium cursor-pointer text-text-primary pointer-events-none"
                     >
                       {behavior.title}
                     </Label>
-                    <p className="text-sm text-[#5A6872] mt-1 pointer-events-none">{behavior.description}</p>
+                    <p className="text-sm text-text-secondary mt-1 pointer-events-none">{behavior.description}</p>
                   </div>
                 </div>
               </CardContent>
@@ -352,11 +352,11 @@ export default function AddHabitPage() {
       </div>
 
       <div className="flex justify-between pt-4">
-        <Button variant="ghost" onClick={handlePrevStep} className="text-[#5A6872]">
+        <Button variant="ghost" onClick={handlePrevStep} className="text-text-secondary">
           <ArrowLeft className="w-4 h-4 mr-2" />
           上一步
         </Button>
-        <Button onClick={handleNextStep} className="bg-[#69B578] hover:bg-[#5a9a68] text-white">
+        <Button onClick={handleNextStep} className="bg-brand-primary hover:bg-brand-primary/80 text-white">
           下一步
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
@@ -389,15 +389,15 @@ export default function AddHabitPage() {
   const renderStep3 = () => (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold text-[#292F36] mb-2">创建新习惯</h1>
-        <p className="text-sm text-[#5A6872]">第3步：设置提醒</p>
+        <h1 className="text-xl font-bold text-text-primary mb-2">创建新习惯</h1>
+        <p className="text-sm text-text-secondary">第3步：设置提醒</p>
       </div>
 
       <div className="space-y-6">
         {selectedMicroBehaviors
           .filter((behavior) => behavior.selected)
           .map((behavior) => (
-            <Card key={behavior.id} className="border-[#D8DEE9]">
+            <Card key={behavior.id} className="border-surface-divider">
               {expandedCards[behavior.id] ? (
                 // 展开状态 - 完整编辑界面
                 <>
@@ -407,17 +407,17 @@ export default function AddHabitPage() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <CardTitle className="text-base text-[#292F36]">{behavior.title}</CardTitle>
-                        <p className="text-sm text-[#5A6872]">{behavior.description}</p>
+                        <CardTitle className="text-base text-text-primary">{behavior.title}</CardTitle>
+                        <p className="text-sm text-text-secondary">{behavior.description}</p>
                       </div>
                       <div className="ml-2">
-                        <ArrowUp className="w-4 h-4 text-[#5A6872]" />
+                        <ArrowUp className="w-4 h-4 text-text-secondary" />
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <Label className="text-[#292F36] font-medium mb-3 block">选择提醒方式</Label>
+                      <Label className="text-text-primary font-medium mb-3 block">选择提醒方式</Label>
                       <RadioGroup
                         value={reminderSettings[behavior.id]?.type || "anchor"}
                         onValueChange={(value) =>
@@ -428,31 +428,31 @@ export default function AddHabitPage() {
                         }
                       >
                         <div className="space-y-3">
-                          <Card className="border-[#81ACDA] bg-blue-50">
+                          <Card className="border-brand-secondary bg-blue-50">
                             <CardContent className="p-3">
                               <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="anchor" id={`anchor-${behavior.id}`} />
                                 <Label htmlFor={`anchor-${behavior.id}`} className="flex-1 cursor-pointer">
                                   <div className="flex items-center">
-                                    <Link className="w-4 h-4 mr-2 text-[#81ACDA]" />
-                                    <span className="font-medium text-[#292F36]">自然提醒（推荐）</span>
+                                    <Link className="w-4 h-4 mr-2 text-brand-secondary" />
+                                    <span className="font-medium text-text-primary">自然提醒（推荐）</span>
                                   </div>
-                                  <p className="text-sm text-[#5A6872] mt-1">与现有习惯关联，更容易记住</p>
+                                  <p className="text-sm text-text-secondary mt-1">与现有习惯关联，更容易记住</p>
                                 </Label>
                               </div>
                             </CardContent>
                           </Card>
 
-                          <Card className="border-[#D8DEE9]">
+                          <Card className="border-surface-divider">
                             <CardContent className="p-3">
                               <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="timer" id={`timer-${behavior.id}`} />
                                 <Label htmlFor={`timer-${behavior.id}`} className="flex-1 cursor-pointer">
                                   <div className="flex items-center">
-                                    <Clock className="w-4 h-4 mr-2 text-[#5A6872]" />
-                                    <span className="font-medium text-[#292F36]">定时提醒</span>
+                                    <Clock className="w-4 h-4 mr-2 text-text-secondary" />
+                                    <span className="font-medium text-text-primary">定时提醒</span>
                                   </div>
-                                  <p className="text-sm text-[#5A6872] mt-1">设置固定时间提醒</p>
+                                  <p className="text-sm text-text-secondary mt-1">设置固定时间提醒</p>
                                 </Label>
                               </div>
                             </CardContent>
@@ -464,7 +464,7 @@ export default function AddHabitPage() {
                     <div>
                       {reminderSettings[behavior.id]?.type === "timer" ? (
                         <>
-                          <Label className="text-[#292F36] font-medium">选择提醒时间</Label>
+                          <Label className="text-text-primary font-medium">选择提醒时间</Label>
                           <Select
                             onValueChange={(value) =>
                               setReminderSettings((prev) => ({
@@ -474,7 +474,7 @@ export default function AddHabitPage() {
                             }
                             value={reminderSettings[behavior.id]?.time}
                           >
-                            <SelectTrigger className="mt-2 border-[#D8DEE9]">
+                            <SelectTrigger className="mt-2 border-surface-divider">
                               <SelectValue placeholder="选择每天的提醒时间" />
                             </SelectTrigger>
                             <SelectContent>
@@ -493,7 +493,7 @@ export default function AddHabitPage() {
                         </>
                       ) : (
                         <>
-                          <Label className="text-[#292F36] font-medium">选择锚点习惯</Label>
+                          <Label className="text-text-primary font-medium">选择锚点习惯</Label>
                           <Select
                             onValueChange={(value) =>
                               setReminderSettings((prev) => ({
@@ -503,7 +503,7 @@ export default function AddHabitPage() {
                             }
                             value={reminderSettings[behavior.id]?.anchor}
                           >
-                            <SelectTrigger className="mt-2 border-[#D8DEE9]">
+                            <SelectTrigger className="mt-2 border-surface-divider">
                               <SelectValue placeholder="选择一个现有的日常习惯" />
                             </SelectTrigger>
                             <SelectContent>
@@ -511,7 +511,7 @@ export default function AddHabitPage() {
                                 <SelectItem key={option.id} value={option.id}>
                                   <div>
                                     <div className="font-medium">{option.label}</div>
-                                    <div className="text-sm text-[#5A6872]">{option.description}</div>
+                                    <div className="text-sm text-text-secondary">{option.description}</div>
                                   </div>
                                 </SelectItem>
                               ))}
@@ -531,15 +531,15 @@ export default function AddHabitPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-medium text-[#292F36]">{behavior.title}</h4>
-                        <ArrowDown className="w-4 h-4 text-[#5A6872]" />
+                        <h4 className="font-medium text-text-primary">{behavior.title}</h4>
+                        <ArrowDown className="w-4 h-4 text-text-secondary" />
                       </div>
-                      <p className="text-sm text-[#5A6872] mb-2">{behavior.description}</p>
+                      <p className="text-sm text-text-secondary mb-2">{behavior.description}</p>
                       <div className="flex items-center">
-                        <span className="text-xs text-[#5A6872] mr-2">提醒方式:</span>
+                        <span className="text-xs text-text-secondary mr-2">提醒方式:</span>
                         <span
                           className={`text-xs ${
-                            reminderSettings[behavior.id]?.type ? "text-[#69B578]" : "text-[#E5B061]"
+                            reminderSettings[behavior.id]?.type ? "text-brand-primary" : "text-brand-accent"
                           }`}
                         >
                           {getReminderDisplayText(behavior.id)}
@@ -554,11 +554,11 @@ export default function AddHabitPage() {
       </div>
 
       <div className="flex justify-between pt-4">
-        <Button variant="ghost" onClick={handlePrevStep} className="text-[#5A6872]">
+        <Button variant="ghost" onClick={handlePrevStep} className="text-text-secondary">
           <ArrowLeft className="w-4 h-4 mr-2" />
           上一步
         </Button>
-        <Button onClick={handleNextStep} className="bg-[#E5B061] hover:bg-[#d49d4f] text-white">
+        <Button onClick={handleNextStep} className="bg-brand-accent hover:bg-brand-accent/80 text-white">
           <Check className="w-4 h-4 mr-2" />
           完成创建
         </Button>
@@ -571,37 +571,37 @@ export default function AddHabitPage() {
       {/* 成功标识 */}
       <div className="text-center mb-6">
         <div className="relative mx-auto w-16 h-16 mb-4">
-          <div className="absolute inset-0 bg-[#69B578] rounded-full flex items-center justify-center">
+          <div className="absolute inset-0 bg-brand-primary rounded-full flex items-center justify-center">
             <Check className="w-8 h-8 text-white" />
           </div>
           <div className="absolute -top-2 -right-2">
-            <Sparkles className="w-6 h-6 text-[#E5B061]" />
+            <Sparkles className="w-6 h-6 text-brand-accent" />
           </div>
         </div>
 
-        <h1 className="text-xl font-bold text-[#292F36] mb-1">🎉 太棒了！</h1>
-        <p className="text-[#5A6872] mb-1">你的新习惯已经创建成功</p>
-        <p className="text-sm text-[#81ACDA] flex items-center justify-center">
+        <h1 className="text-xl font-bold text-text-primary mb-1">🎉 太棒了！</h1>
+        <p className="text-text-secondary mb-1">你的新习惯已经创建成功</p>
+        <p className="text-sm text-brand-secondary flex items-center justify-center">
           <Heart className="w-4 h-4 mr-1" />
           每一个小行动都是改变的开始
         </p>
       </div>
 
       {/* 习惯信息和微行为计划合并卡片 */}
-      <Card className="border-[#69B578] border-2 mb-6 bg-gradient-to-br from-white to-[#EBF2FA]">
+      <Card className="border-brand-primary border-2 mb-6 bg-gradient-to-br from-white to-surface-main">
         <CardHeader className="pb-3">
           <div className="flex items-center mb-2">
-            <Target className="w-5 h-5 text-[#69B578] mr-2" />
-            <CardTitle className="text-lg text-[#292F36]">你的新习惯</CardTitle>
+            <Target className="w-5 h-5 text-brand-primary mr-2" />
+            <CardTitle className="text-lg text-text-primary">你的新习惯</CardTitle>
           </div>
           <div>
-            <h3 className="font-bold text-[#292F36] text-lg mb-2">{habitName}</h3>
-            {habitDescription && <p className="text-[#5A6872] text-sm leading-relaxed mb-4">{habitDescription}</p>}
+            <h3 className="font-bold text-text-primary text-lg mb-2">{habitName}</h3>
+            {habitDescription && <p className="text-text-secondary text-sm leading-relaxed mb-4">{habitDescription}</p>}
           </div>
 
           <div className="flex items-center mt-4 mb-2">
-            <Sparkles className="w-5 h-5 mr-2 text-[#E5B061]" />
-            <h2 className="text-lg font-bold text-[#292F36]">你的微行动计划</h2>
+            <Sparkles className="w-5 h-5 mr-2 text-brand-accent" />
+            <h2 className="text-lg font-bold text-text-primary">你的微行动计划</h2>
           </div>
         </CardHeader>
 
@@ -611,16 +611,16 @@ export default function AddHabitPage() {
             .map((behavior, index) => (
               <div key={behavior.id} className="bg-gray-50/80 rounded-lg p-2.5">
                 <div className="flex items-start space-x-2.5">
-                  <div className="flex-shrink-0 w-4 h-4 bg-[#69B578] rounded-full flex items-center justify-center text-white text-xs font-medium">
+                  <div className="flex-shrink-0 w-4 h-4 bg-brand-primary rounded-full flex items-center justify-center text-white text-xs font-medium">
                     {index + 1}
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-medium text-[#292F36] mb-1 text-sm">{behavior.title}</h4>
-                    <p className="text-xs text-[#5A6872] mb-1.5">{behavior.description}</p>
+                    <h4 className="font-medium text-text-primary mb-1 text-sm">{behavior.title}</h4>
+                    <p className="text-xs text-text-secondary mb-1.5">{behavior.description}</p>
 
                     <div className="flex items-center text-xs">
-                      <span className="text-[#5A6872] mr-1.5">📅 提醒方式:</span>
-                      <span className="text-[#69B578] font-medium">{getReminderText(behavior.id)}</span>
+                      <span className="text-text-secondary mr-1.5">📅 提醒方式:</span>
+                      <span className="text-brand-primary font-medium">{getReminderText(behavior.id)}</span>
                     </div>
                   </div>
                 </div>
@@ -630,10 +630,10 @@ export default function AddHabitPage() {
       </Card>
 
       {/* 鼓励文案 */}
-      <Card className="border-[#E5B061] bg-gradient-to-r from-[#E5B061]/10 to-[#69B578]/10 mb-6">
+      <Card className="border-brand-accent bg-gradient-to-r from-brand-accent/10 to-brand-primary/10 mb-6">
         <CardContent className="p-3 text-center">
-          <p className="text-[#292F36] font-medium mb-2 text-sm">✨ 记住福格行为模型的秘诀</p>
-          <p className="text-sm text-[#5A6872] leading-relaxed">
+          <p className="text-text-primary font-medium mb-2 text-sm">✨ 记住福格行为模型的秘诀</p>
+          <p className="text-sm text-text-secondary leading-relaxed">
             从小事开始，利用现有习惯作为提醒，持续的小行动会带来巨大的改变！
           </p>
         </CardContent>
@@ -642,18 +642,18 @@ export default function AddHabitPage() {
       {/* 完成按钮 */}
       <Button
         onClick={handleComplete}
-        className="w-full bg-[#69B578] hover:bg-[#5a9a68] text-white py-2 text-lg font-medium"
+        className="w-full bg-brand-primary hover:bg-brand-primary/80 text-white py-2 text-lg font-medium"
       >
         开始我的习惯之旅 🚀
       </Button>
 
       {/* 底部提示 */}
-      <p className="text-center text-xs text-[#5A6872] mt-4">你可以随时在习惯列表中查看和调整你的微行为</p>
+      <p className="text-center text-xs text-text-secondary mt-4">你可以随时在习惯列表中查看和调整你的微行为</p>
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-[#EBF2FA] p-4">
+    <div className="min-h-screen bg-surface-main p-4">
       <div className="max-w-md mx-auto">
         {/* 进度指示器 - 只在前3步显示 */}
         {currentStep <= 3 && (
@@ -663,12 +663,12 @@ export default function AddHabitPage() {
                 <div key={step} className="flex items-center">
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                      step <= currentStep ? "bg-[#69B578] text-white" : "bg-[#D8DEE9] text-[#5A6872]"
+                      step <= currentStep ? "bg-brand-primary text-white" : "bg-surface-divider text-text-secondary"
                     }`}
                   >
                     {step < currentStep ? <Check className="w-4 h-4" /> : step}
                   </div>
-                  {step < 3 && <div className={`w-8 h-0.5 ${step < currentStep ? "bg-[#69B578]" : "bg-[#D8DEE9]"}`} />}
+                  {step < 3 && <div className={`w-8 h-0.5 ${step < currentStep ? "bg-brand-primary" : "bg-surface-divider"}`} />}
                 </div>
               ))}
             </div>
@@ -677,7 +677,7 @@ export default function AddHabitPage() {
 
         {/* 步骤内容 */}
         {currentStep <= 3 ? (
-          <Card className="border-[#D8DEE9] shadow-sm">
+          <Card className="border-surface-divider shadow-sm">
             <CardContent className="p-6">
               {currentStep === 1 && renderStep1()}
               {currentStep === 2 && isLoadingRecommendations && renderLoadingStep2()}

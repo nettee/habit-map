@@ -60,7 +60,6 @@ habit-map/
 │   └── use-toast.ts      # Toast 通知
 ├── lib/                  # 工具函数库
 │   └── utils.ts          # 通用工具函数
-├── styles/               # 样式文件
 ├── public/               # 静态资源
 └── docs/                 # 项目文档
 ```

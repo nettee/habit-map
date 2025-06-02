@@ -47,6 +47,19 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* 品牌色系 - 修正后的准确 HSL 值 */
+    --brand-primary: 132 34% 56%;      /* #69B578 */
+    --brand-accent: 43 71% 62%;        /* #E5B061 */
+    --brand-secondary: 210 55% 68%;    /* #81ACDA */
+    
+    /* 文本色系 */
+    --text-primary: 210 13% 19%;       /* #292F36 */
+    --text-secondary: 210 10% 38%;     /* #5A6872 */
+    
+    /* 表面色系 */
+    --surface-main: 210 59% 95%;       /* #EBF2FA */
+    --surface-divider: 210 24% 85%;    /* #D8DEE9 */
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -81,6 +94,19 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* 品牌色系 - 深色主题，降低亮度 */
+    --brand-primary: 132 34% 46%;      /* 降低 10% 亮度 */
+    --brand-accent: 43 71% 52%;        /* 降低 10% 亮度 */
+    --brand-secondary: 210 55% 58%;    /* 降低 10% 亮度 */
+    
+    /* 文本色系 - 反转为浅色 */
+    --text-primary: 0 0% 95%;          /* 浅色文本 */
+    --text-secondary: 0 0% 70%;        /* 中等浅色文本 */
+    
+    /* 表面色系 - 深色背景 */
+    --surface-main: 210 15% 8%;        /* 深色背景 */
+    --surface-divider: 210 15% 15%;    /* 深色分隔线 */
   }
 }
 
