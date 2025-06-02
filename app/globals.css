@@ -22,6 +22,18 @@ body {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* 移动端键盘适配优化 */
+  .keyboard-adaptive {
+    /* 支持动态视口高度 */
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  /* 防止输入时页面缩放 */
+  input, textarea, select {
+    font-size: 16px;
+  }
 }
 
 @layer base {

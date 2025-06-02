@@ -88,7 +88,7 @@ export default function AddHabitPage() {
   return (
     <div className="min-h-screen bg-surface-main">
       {/* 步骤内容 */}
-      <div className="h-screen flex flex-col">
+      <div className="h-[100dvh] flex flex-col">
         {/* 步骤内容区域 - 占用全部空间 */}
         <div className="flex-1 min-h-0">
           {currentStep === 1 && (

@@ -71,7 +71,7 @@ export default function StepLayout({
           </div>
         </div>
       ) : (
-        <div className="flex-1 min-h-0 p-4 pb-0">
+        <div className="flex-1 min-h-0 p-4 pb-0 overflow-y-auto">
           {children}
         </div>
       )}

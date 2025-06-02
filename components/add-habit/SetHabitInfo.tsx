@@ -63,7 +63,7 @@ export default function SetHabitInfo({
             value={habitDescription}
             onChange={(e) => setHabitDescription(e.target.value)}
             placeholder="我为什么想养成这个习惯？它对我有什么意义？"
-            className="mt-2 border-surface-divider focus:border-brand-primary min-h-64"
+            className="mt-2 border-surface-divider focus:border-brand-primary min-h-32 md:min-h-64 resize-none"
           />
         </div>
       </div>
