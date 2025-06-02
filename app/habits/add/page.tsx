@@ -1,8 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Check } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import SetHabitInfo from "@/components/add-habit/SetHabitInfo"
@@ -193,65 +191,46 @@ export default function AddHabitPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-main p-4">
-      <div className="max-w-md mx-auto">
-        {/* 进度指示器 */}
-        <div className="flex justify-center mb-6">
-          <div className="flex items-center space-x-2">
-            {[1, 2, 3].map((step) => (
-              <div key={step} className="flex items-center">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    step <= currentStep ? "bg-brand-primary text-white" : "bg-surface-divider text-text-secondary"
-                  }`}
-                >
-                  {step < currentStep ? <Check className="w-4 h-4" /> : step}
-                </div>
-                {step < 3 && <div className={`w-8 h-0.5 ${step < currentStep ? "bg-brand-primary" : "bg-surface-divider"}`} />}
-              </div>
-            ))}
-          </div>
+    <div className="min-h-screen bg-surface-main">
+      {/* 步骤内容 */}
+      <div className="h-screen flex flex-col">
+        {/* 步骤内容区域 - 占用全部空间 */}
+        <div className="flex-1 min-h-0">
+          {currentStep === 1 && (
+            <SetHabitInfo
+              habitName={habitName}
+              setHabitName={setHabitName}
+              habitDescription={habitDescription}
+              setHabitDescription={setHabitDescription}
+              onNext={handleNextStep}
+              onCancel={() => window.history.back()}
+            />
+          )}
+          {currentStep === 2 && (
+            <SelectBehaviors
+              habitName={habitName}
+              selectedMicroBehaviors={selectedMicroBehaviors}
+              isLoadingRecommendations={isLoadingRecommendations}
+              onToggleBehavior={handleMicroBehaviorToggle}
+              onNext={handleNextStep}
+              onPrev={handlePrevStep}
+            />
+          )}
+          {currentStep === 3 && (
+            <SetBehaviorReminders
+              selectedMicroBehaviors={selectedMicroBehaviors}
+              reminderSettings={reminderSettings}
+              setReminderSettings={setReminderSettings}
+              anchorOptions={anchorOptions}
+              expandedCards={expandedCards}
+              onToggleCardExpanded={toggleCardExpanded}
+              onComplete={handleComplete}
+              onPrev={handlePrevStep}
+            />
+          )}
         </div>
-
-        {/* 步骤内容 */}
-        <Card className="border-surface-divider shadow-sm h-[calc(100vh-8rem)]">
-          <CardContent className="p-6 h-full">
-            {currentStep === 1 && (
-              <SetHabitInfo
-                habitName={habitName}
-                setHabitName={setHabitName}
-                habitDescription={habitDescription}
-                setHabitDescription={setHabitDescription}
-                onNext={handleNextStep}
-                onCancel={() => window.history.back()}
-              />
-            )}
-            {currentStep === 2 && (
-              <SelectBehaviors
-                habitName={habitName}
-                selectedMicroBehaviors={selectedMicroBehaviors}
-                isLoadingRecommendations={isLoadingRecommendations}
-                onToggleBehavior={handleMicroBehaviorToggle}
-                onNext={handleNextStep}
-                onPrev={handlePrevStep}
-              />
-            )}
-            {currentStep === 3 && (
-              <SetBehaviorReminders
-                selectedMicroBehaviors={selectedMicroBehaviors}
-                reminderSettings={reminderSettings}
-                setReminderSettings={setReminderSettings}
-                anchorOptions={anchorOptions}
-                expandedCards={expandedCards}
-                onToggleCardExpanded={toggleCardExpanded}
-                onComplete={handleComplete}
-                onPrev={handlePrevStep}
-              />
-            )}
-          </CardContent>
-        </Card>
-        <Toaster />
       </div>
+      <Toaster />
     </div>
   )
 }
