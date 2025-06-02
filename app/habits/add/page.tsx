@@ -16,71 +16,6 @@ export default function AddHabitPage() {
   const [reminderSettings, setReminderSettings] = useState<ReminderSettings>({})
   const { toast } = useToast()
   const [expandedCards, setExpandedCards] = useState<{ [key: string]: boolean }>({})
-  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false)
-
-  // 模拟推荐的微行为
-  const recommendedMicroBehaviors: MicroBehavior[] = [
-    {
-      id: "1",
-      title: "打开书本",
-      description: "每天只需要打开一本书，翻到任意一页",
-      selected: false,
-    },
-    {
-      id: "2",
-      title: "阅读一段话",
-      description: "读完一个段落就算完成",
-      selected: false,
-    },
-    {
-      id: "3",
-      title: "阅读2分钟",
-      description: "设置计时器，专注阅读2分钟",
-      selected: false,
-    },
-    {
-      id: "4",
-      title: "准备阅读环境",
-      description: "找一个安静的地方，准备好书本和水杯",
-      selected: false,
-    },
-    {
-      id: "5",
-      title: "记录一个想法",
-      description: "阅读后写下一句话的感受或想法",
-      selected: false,
-    },
-    {
-      id: "6",
-      title: "朗读一句话",
-      description: "大声朗读书中的任意一句话",
-      selected: false,
-    },
-    {
-      id: "7",
-      title: "标记一个重点",
-      description: "用笔或便签标记一个有趣的内容",
-      selected: false,
-    },
-    {
-      id: "8",
-      title: "翻阅目录",
-      description: "浏览书本目录，选择感兴趣的章节",
-      selected: false,
-    },
-    {
-      id: "9",
-      title: "设置阅读提醒",
-      description: "在手机上设置明天的阅读提醒",
-      selected: false,
-    },
-    {
-      id: "10",
-      title: "分享阅读计划",
-      description: "告诉朋友或家人你今天的阅读计划",
-      selected: false,
-    },
-  ]
 
   const anchorOptions: AnchorOption[] = [
     { id: "morning-brush", label: "早上刷牙后", description: "利用晨间例行公事" },
@@ -90,75 +25,35 @@ export default function AddHabitPage() {
     { id: "commute", label: "通勤路上", description: "利用交通时间" },
   ]
 
-  const handleMicroBehaviorToggle = (behaviorId: string) => {
-    const selectedCount = selectedMicroBehaviors.filter((b) => b.selected).length
-    const behavior = selectedMicroBehaviors.find((b) => b.id === behaviorId)
-
-    // 如果要选择第4个，显示toast提示
-    if (!behavior?.selected && selectedCount >= 3) {
-      toast({
-        title: "选择数量已达上限",
-        description: "最多只能选择3个微行为，请先取消其他选择。",
-        variant: "destructive",
-      })
-      return
+  const handleNextStep = () => {
+    if (currentStep === 1) {
+      setCurrentStep(2)
+    } else if (currentStep === 2) {
+      // 这个逻辑现在由SelectBehaviors组件的onNext处理
+      // 这里不应该到达，因为SelectBehaviors会直接调用handleSelectBehaviors
     }
-
-    setSelectedMicroBehaviors((prev) =>
-      prev.map((behavior) => (behavior.id === behaviorId ? { ...behavior, selected: !behavior.selected } : behavior)),
-    )
   }
 
-  const initializeMicroBehaviors = () => {
-    if (selectedMicroBehaviors.length === 0) {
-      setSelectedMicroBehaviors(recommendedMicroBehaviors)
-      // 初始化所有选中的微行为卡片为展开状态
-      const initialExpandedState: { [key: string]: boolean } = {}
-      recommendedMicroBehaviors.forEach((behavior) => {
-        if (behavior.selected) {
-          initialExpandedState[behavior.id] = true
+  const handleSelectBehaviors = (behaviors: MicroBehavior[]) => {
+    setSelectedMicroBehaviors(behaviors)
+    
+    // 为选中的微行为初始化展开状态和默认提醒设置
+    const initialExpandedState: { [key: string]: boolean } = {}
+    const initialReminderSettings: ReminderSettings = { ...reminderSettings }
+
+    behaviors
+      .filter((b) => b.selected)
+      .forEach((behavior) => {
+        initialExpandedState[behavior.id] = true
+        // 如果该微行为还没有提醒设置，初始化为默认的自然提醒
+        if (!initialReminderSettings[behavior.id]) {
+          initialReminderSettings[behavior.id] = { type: "anchor" }
         }
       })
-      setExpandedCards(initialExpandedState)
-    }
-  }
 
-  const handleNextStep = async () => {
-    if (currentStep === 1) {
-      setIsLoadingRecommendations(true)
-      setCurrentStep(2)
-      // 模拟系统推荐微行为的等待时间
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      initializeMicroBehaviors()
-      setIsLoadingRecommendations(false)
-    } else if (currentStep === 2) {
-      const selectedCount = selectedMicroBehaviors.filter((b) => b.selected).length
-      if (selectedCount === 0) {
-        toast({
-          title: "请选择微行为",
-          description: "至少需要选择1个微行为才能继续。",
-          variant: "destructive",
-        })
-        return
-      }
-      // 为选中的微行为初始化展开状态和默认提醒设置
-      const initialExpandedState: { [key: string]: boolean } = {}
-      const initialReminderSettings: ReminderSettings = { ...reminderSettings }
-
-      selectedMicroBehaviors
-        .filter((b) => b.selected)
-        .forEach((behavior) => {
-          initialExpandedState[behavior.id] = true
-          // 如果该微行为还没有提醒设置，初始化为默认的自然提醒
-          if (!initialReminderSettings[behavior.id]) {
-            initialReminderSettings[behavior.id] = { type: "anchor" }
-          }
-        })
-
-      setExpandedCards(initialExpandedState)
-      setReminderSettings(initialReminderSettings)
-      setCurrentStep(3)
-    }
+    setExpandedCards(initialExpandedState)
+    setReminderSettings(initialReminderSettings)
+    setCurrentStep(3)
   }
 
   const handlePrevStep = () => {
@@ -209,10 +104,8 @@ export default function AddHabitPage() {
           {currentStep === 2 && (
             <SelectBehaviors
               habitName={habitName}
-              selectedMicroBehaviors={selectedMicroBehaviors}
-              isLoadingRecommendations={isLoadingRecommendations}
-              onToggleBehavior={handleMicroBehaviorToggle}
-              onNext={handleNextStep}
+              habitDescription={habitDescription}
+              onNext={handleSelectBehaviors}
               onPrev={handlePrevStep}
             />
           )}
