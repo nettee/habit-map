@@ -7,21 +7,21 @@ import { useHabitWizard } from "../HabitWizardContext"
 
 export default function Step2Page() {
   const router = useRouter()
-  const { habitName, setStep } = useHabitWizard()
+  const { habitBasicInfo, setStep } = useHabitWizard()
 
   // 设置当前步骤为2，并校验前置数据
   useEffect(() => {
     setStep(2)
     
     // 校验前置数据：习惯名称必须存在（描述是可选的）
-    if (!habitName.trim()) {
+    if (!habitBasicInfo.title.trim()) {
       // 如果缺失前置数据，重定向到第一步
       router.push('/habits/add/step1')
     }
-  }, [habitName, setStep, router])
+  }, [habitBasicInfo.title, setStep, router])
 
   // 如果前置数据缺失，显示加载状态
-  if (!habitName.trim()) {
+  if (!habitBasicInfo.title.trim()) {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
@@ -33,4 +33,4 @@ export default function Step2Page() {
   }
 
   return <SelectBehaviors />
-} 
+}

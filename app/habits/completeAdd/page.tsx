@@ -13,7 +13,7 @@ interface MicroBehavior {
 }
 
 interface HabitData {
-  habitName: string
+  habitTitle: string
   habitDescription: string
   selectedMicroBehaviors: MicroBehavior[]
   reminderSettings: { [key: string]: any }
@@ -114,7 +114,7 @@ export default function CompleteAddPage() {
               <CardTitle className="text-lg text-text-primary">你的新习惯</CardTitle>
             </div>
             <div>
-              <h3 className="font-bold text-text-primary text-lg mb-2">{habitData.habitName}</h3>
+              <h3 className="font-bold text-text-primary text-lg mb-2">{habitData.habitTitle}</h3>
               {habitData.habitDescription && (
                 <p className="text-text-secondary text-sm leading-relaxed mb-4">{habitData.habitDescription}</p>
               )}

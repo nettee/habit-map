@@ -1,7 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from "react"
-import { MicroBehavior, ReminderSettings } from "@/components/add-habit/types"
+import { MicroBehavior, ReminderSettings, HabitBasicInfo } from "@/components/add-habit/types"
 
 /**
  * 习惯向导业务Context类型定义
@@ -18,15 +18,13 @@ import { MicroBehavior, ReminderSettings } from "@/components/add-habit/types"
 interface HabitWizardContextType {
   // ===== 核心状态数据 =====
   currentStep: number                    // 当前所在步骤（1-3）
-  habitName: string                      // 习惯名称
-  habitDescription: string               // 习惯描述
+  habitBasicInfo: HabitBasicInfo         // 习惯基本信息（标题和描述）
   selectedMicroBehaviors: MicroBehavior[] // 选中的微行为列表
   reminderSettings: ReminderSettings     // 提醒设置配置
   expandedCards: { [key: string]: boolean } // 卡片展开状态（UI辅助状态）
   
   // ===== 数据操作方法 =====
-  setHabitName: (name: string) => void
-  setHabitDescription: (description: string) => void
+  updateHabitBasicInfo: (updates: Partial<HabitBasicInfo>) => void
   selectBehaviors: (behaviors: MicroBehavior[]) => void
   setReminderSettings: (settings: ReminderSettings | ((prev: ReminderSettings) => ReminderSettings)) => void
   toggleCardExpanded: (behaviorId: string) => void
@@ -64,8 +62,10 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
   // ===== 状态定义 =====
   // 使用多个独立的useState，便于精确控制更新和优化性能
   const [currentStep, setCurrentStep] = useState(1)
-  const [habitName, setHabitName] = useState("")
-  const [habitDescription, setHabitDescription] = useState("")
+  const [habitBasicInfo, setHabitBasicInfo] = useState<HabitBasicInfo>({
+    title: "",
+    description: ""
+  })
   const [selectedMicroBehaviors, setSelectedMicroBehaviors] = useState<MicroBehavior[]>([])
   const [reminderSettings, setReminderSettings] = useState<ReminderSettings>({})
   const [expandedCards, setExpandedCards] = useState<{ [key: string]: boolean }>({})
@@ -79,8 +79,18 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
         const parsedState = JSON.parse(savedState)
         // 安全地恢复每个状态字段，避免因数据格式变化导致的错误
         if (parsedState.currentStep) setCurrentStep(parsedState.currentStep)
-        if (parsedState.habitName) setHabitName(parsedState.habitName)
-        if (parsedState.habitDescription) setHabitDescription(parsedState.habitDescription)
+        
+        // 兼容旧版本数据格式
+        if (parsedState.habitBasicInfo) {
+          setHabitBasicInfo(parsedState.habitBasicInfo)
+        } else if (parsedState.habitName || parsedState.habitDescription) {
+          // 从旧格式迁移
+          setHabitBasicInfo({
+            title: parsedState.habitName || "",
+            description: parsedState.habitDescription || ""
+          })
+        }
+        
         if (parsedState.selectedMicroBehaviors) setSelectedMicroBehaviors(parsedState.selectedMicroBehaviors)
         if (parsedState.reminderSettings) setReminderSettings(parsedState.reminderSettings)
         if (parsedState.expandedCards) setExpandedCards(parsedState.expandedCards)
@@ -97,17 +107,24 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
   useEffect(() => {
     const stateToSave = {
       currentStep,
-      habitName,
-      habitDescription,
+      habitBasicInfo,
       selectedMicroBehaviors,
       reminderSettings,
       expandedCards,
     }
     localStorage.setItem("habitWizardState", JSON.stringify(stateToSave))
-  }, [currentStep, habitName, habitDescription, selectedMicroBehaviors, reminderSettings, expandedCards])
+  }, [currentStep, habitBasicInfo, selectedMicroBehaviors, reminderSettings, expandedCards])
 
   // ===== 复杂业务操作方法 =====
   
+  /**
+   * 更新习惯基本信息
+   * 支持部分更新，只需传入要修改的字段
+   */
+  const updateHabitBasicInfo = (updates: Partial<HabitBasicInfo>) => {
+    setHabitBasicInfo(prev => ({ ...prev, ...updates }))
+  }
+
   /**
    * 选择微行为的复合操作
    * 
@@ -179,8 +196,8 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
   const complete = () => {
     // 构建最终的习惯数据
     const habitData = {
-      habitName,
-      habitDescription,
+      habitTitle: habitBasicInfo.title,
+      habitDescription: habitBasicInfo.description,
       selectedMicroBehaviors: selectedMicroBehaviors.filter((b) => b.selected),
       reminderSettings,
     }
@@ -200,8 +217,7 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
    */
   const resetState = () => {
     setCurrentStep(1)
-    setHabitName("")
-    setHabitDescription("")
+    setHabitBasicInfo({ title: "", description: "" })
     setSelectedMicroBehaviors([])
     setReminderSettings({})
     setExpandedCards({})
@@ -219,10 +235,10 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
       case 1:
         return true // 总是可以进入第一步
       case 2:
-        return habitName.trim() !== "" // 第二步需要习惯名称
+        return habitBasicInfo.title.trim() !== "" // 第二步需要习惯标题
       case 3:
-        return habitName.trim() !== "" && 
-               selectedMicroBehaviors.some(b => b.selected) // 第三步需要习惯名称和选择的微行为
+        return habitBasicInfo.title.trim() !== "" && 
+               selectedMicroBehaviors.some(b => b.selected) // 第三步需要习惯标题和选择的微行为
       default:
         return false
     }
@@ -237,13 +253,13 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
     
     switch (step) {
       case 2:
-        if (!habitName.trim()) {
-          errors.push("请输入习惯名称")
+        if (!habitBasicInfo.title.trim()) {
+          errors.push("请输入习惯标题")
         }
         break
       case 3:
-        if (!habitName.trim()) {
-          errors.push("请输入习惯名称")
+        if (!habitBasicInfo.title.trim()) {
+          errors.push("请输入习惯标题")
         }
         if (!selectedMicroBehaviors.some(b => b.selected)) {
           errors.push("请至少选择一个微行为")
@@ -260,15 +276,13 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
   const contextValue = useMemo(() => ({
     // 状态
     currentStep,
-    habitName,
-    habitDescription,
+    habitBasicInfo,
     selectedMicroBehaviors,
     reminderSettings,
     expandedCards,
     
     // 操作函数
-    setHabitName,
-    setHabitDescription,
+    updateHabitBasicInfo,
     selectBehaviors,
     setReminderSettings,
     toggleCardExpanded,
@@ -284,8 +298,7 @@ export const HabitWizardProvider: React.FC<HabitWizardProviderProps> = ({ childr
   }), [
     // 依赖数组：只有这些状态变化时才重新创建Context值
     currentStep,
-    habitName,
-    habitDescription,
+    habitBasicInfo,
     selectedMicroBehaviors,
     reminderSettings,
     expandedCards,

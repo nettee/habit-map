@@ -1,12 +1,9 @@
-import { MicroBehavior } from "@/components/add-habit/types"
+import { MicroBehavior, HabitBasicInfo } from "@/components/add-habit/types"
 
 const API_URL = '/api/behavior-suggestions'
 
 export interface BehaviorSuggestionRequest {
-  habit: {
-    title: string
-    description: string
-  }
+  habit: HabitBasicInfo
 }
 
 export interface BehaviorSuggestionResponse {
@@ -17,14 +14,10 @@ export interface BehaviorSuggestionResponse {
 }
 
 export async function getBehaviorSuggestions(
-  habitTitle: string,
-  habitDescription: string
+  habitBasicInfo: HabitBasicInfo
 ): Promise<MicroBehavior[]> {
   const requestData: BehaviorSuggestionRequest = {
-    habit: {
-      title: habitTitle,
-      description: habitDescription,
-    },
+    habit: habitBasicInfo,
   }
 
   try {

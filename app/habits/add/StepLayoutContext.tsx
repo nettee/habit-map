@@ -106,7 +106,7 @@ const StepLayoutContext = createContext<StepLayoutContextType | null>(null)
  * 4. 管理可选的固定内容区域
  * 
  * 与HabitWizardContext的关系：
- * - 消费：读取currentStep、habitName、selectedMicroBehaviors等业务状态
+ * - 消费：读取currentStep、habitBasicInfo、selectedMicroBehaviors等业务状态
  * - 计算：基于业务状态计算canGoNext、progress等UI状态
  * - 不修改：从不直接修改业务状态，只提供计算结果
  */
@@ -116,7 +116,7 @@ interface StepLayoutProviderProps {
 
 export function StepLayoutProvider({ children }: StepLayoutProviderProps) {
   // 从业务Context获取必要的状态数据
-  const { currentStep, habitName, selectedMicroBehaviors } = useHabitWizard()
+  const { currentStep, habitBasicInfo, selectedMicroBehaviors } = useHabitWizard()
   
   // 管理固定内容区域的状态
   // 这允许某些步骤在滚动内容之前插入固定的UI元素
@@ -139,7 +139,7 @@ export function StepLayoutProvider({ children }: StepLayoutProviderProps) {
     switch (currentStep) {
       case 1:
         // 第一步：需要输入习惯名称
-        canGoNext = habitName.trim() !== ""
+        canGoNext = habitBasicInfo.title.trim() !== ""
         break
       case 2:
         // 第二步：需要选择至少一个微行为
@@ -183,7 +183,7 @@ export function StepLayoutProvider({ children }: StepLayoutProviderProps) {
     // 依赖数组：只有这些状态变化时才重新计算
     // 注意这里不包括所有业务状态，只包括影响UI计算的关键状态
     currentStep,           // 步骤变化影响配置和进度
-    habitName,            // 习惯名称影响第1步的前进条件
+    habitBasicInfo,            // 习惯基本信息影响第1步的前进条件
     selectedMicroBehaviors, // 微行为选择影响第2步的前进条件
     fixedContent          // 固定内容变化需要重新渲染
   ])

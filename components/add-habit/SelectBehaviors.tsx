@@ -13,8 +13,7 @@ import { useStepLayout } from "@/app/habits/add/StepLayoutContext"
 
 export default function SelectBehaviors() {
   const {
-    habitName,
-    habitDescription,
+    habitBasicInfo,
     selectedMicroBehaviors: contextSelectedBehaviors,
     selectBehaviors,
   } = useHabitWizard()
@@ -29,7 +28,7 @@ export default function SelectBehaviors() {
       setIsLoading(true)
       setError("")
       
-      const suggestions = await getBehaviorSuggestions(habitName, habitDescription)
+      const suggestions = await getBehaviorSuggestions(habitBasicInfo)
       setSelectedMicroBehaviors(suggestions)
       
     } catch (error) {
@@ -43,7 +42,7 @@ export default function SelectBehaviors() {
   // 组件挂载时自动获取建议
   useEffect(() => {
     fetchBehaviorSuggestions()
-  }, [habitName, habitDescription])
+  }, [habitBasicInfo.title, habitBasicInfo.description])
 
   // 如果 Context 中有已选择的微行为，恢复状态
   useEffect(() => {
@@ -59,7 +58,7 @@ export default function SelectBehaviors() {
       <Card className="border-surface-divider bg-surface-main">
         <CardContent className="p-4">
           <p className="text-sm text-text-secondary">习惯：</p>
-          <p className="font-medium text-text-primary">{habitName}</p>
+          <p className="font-medium text-text-primary">{habitBasicInfo.title}</p>
         </CardContent>
       </Card>
     )
@@ -90,7 +89,7 @@ export default function SelectBehaviors() {
     return () => {
       setFixedContent(null)
     }
-  }, [habitName, selectedMicroBehaviors, isLoading, error, setFixedContent])
+  }, [habitBasicInfo.title, selectedMicroBehaviors, isLoading, error, setFixedContent])
 
   const handleMicroBehaviorToggle = (behaviorId: string) => {
     const selectedCount = selectedMicroBehaviors.filter((b) => b.selected).length
