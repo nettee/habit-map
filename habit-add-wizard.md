@@ -90,6 +90,35 @@
 - **简化**：`app/habits/add/step*/page.tsx`（移除布局包裹）
 - **更新**：相关组件的导入和使用
 
+### Context职责划分与依赖关系
+
+#### HabitWizardContext（业务层）
+- **职责**：业务逻辑和数据管理
+- **包含**：习惯数据、微行为选择、提醒设置、数据验证、localStorage持久化
+- **特点**：与UI无关，可复用，生命周期较长
+
+#### StepLayoutContext（UI层）
+- **职责**：UI布局和导航状态管理
+- **包含**：进度显示、步骤标题、导航按钮状态、布局配置、页面过渡
+- **特点**：与具体UI紧密相关，生命周期较短
+
+#### 依赖关系原则
+- **单向依赖**：StepLayoutContext依赖HabitWizardContext，不反向依赖
+- **边界清晰**：业务层不关心UI状态，UI层不包含业务逻辑
+- **状态共享**：`currentStep`由业务层持有和管理，UI层通过hook获取
+
+#### 交互模式
+```typescript
+// UI层消费业务层数据
+const StepLayoutProvider = ({ children }) => {
+  const { currentStep, canProceedToStep } = useHabitWizard();
+  
+  const canGoNext = canProceedToStep(currentStep + 1);
+  const progress = (currentStep / 3) * 100;
+  // ...
+};
+```
+
 ## 进度记录
 
 - **步骤1**: ✅ 已完成 - 创建了 `HabitWizardContext.tsx`，实现了：
@@ -163,4 +192,27 @@
     - `app/habits/add/page.tsx` 改为重定向页面，自动跳转到 `step1`
     - 移除了原来的条件渲染逻辑和 `getStepContent` 函数
   - **功能验证**：TypeScript 编译通过，路由导航正常工作
-
+- **步骤4**: ✅ 已完成 - 布局融合优化：
+  - **新建 StepLayoutContext**：
+    - 创建了 `app/habits/add/StepLayoutContext.tsx`，负责UI布局和导航状态管理
+    - 实现了步骤配置、进度计算、按钮状态等UI层逻辑
+    - 支持动态 `fixedContent` 设置，通过 `setFixedContent` 方法管理
+    - 遵循单向依赖原则：依赖 `HabitWizardContext`，不反向依赖
+  - **重构 layout.tsx**：
+    - 融合了原 `StepLayout.tsx` 的布局逻辑到统一的 `layout.tsx` 中
+    - 挂载了 `StepLayoutProvider`，形成完整的 Provider 层次结构
+    - 实现了进度指示器、步骤标题、固定内容区域、滚动容器、导航按钮的统一布局
+    - 支持不同步骤的布局配置（如是否需要滚动）
+  - **简化步骤页面**：
+    - **SetHabitInfo**：移除 `StepLayout` 包裹，只保留表单内容
+    - **SelectBehaviors**：移除 `StepLayout` 包裹，使用 `setFixedContent` 设置固定内容
+    - **SetBehaviorReminders**：移除 `StepLayout` 包裹，只保留卡片列表内容
+  - **删除冗余文件**：
+    - 删除了 `components/add-habit/StepLayout.tsx` 文件
+    - 消除了双层布局结构，避免代码重复
+  - **架构优化成果**：
+    - **代码重复消除**：每个步骤页面不再需要手动包裹布局组件
+    - **维护性提升**：布局逻辑集中管理，修改只需在一个地方进行
+    - **职责分离**：业务逻辑与UI布局完全分离，符合最佳实践
+    - **Context驱动**：通过Context统一管理布局状态，提供更好的开发体验
+  - **功能验证**：TypeScript 编译通过，布局融合成功，所有功能正常
