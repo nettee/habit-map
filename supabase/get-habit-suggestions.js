@@ -1,19 +1,15 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { OpenAI } from "npm:openai@4.8.0";
-
 const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: Deno.env.get('DEEPSEEK_API_KEY')
+  baseURL: 'https://api.siliconflow.cn/v1',
+  apiKey: Deno.env.get('SILICONFLOW_API_KEY')
 });
-
 Deno.serve(async (req)=>{
   const { habit } = await req.json();
-
   const systemPrompt = `
   你是一个习惯拆分专家，擅长根据用户输入的习惯内容与习惯描述，生成该习惯拆分为微行为的建议。
   `;
-
   const userPrompt = `
   请根据福格行为模型原理，分析用户输入的习惯内容与习惯描述，生成10条将该习惯拆分为微行为的建议。
   注意：输出格式为 JSON 数组，每个元素为一个对象，对象包含 title 和 description 两个字段。严格按照示例输出格式输出，禁止输出任何其他内容。
@@ -69,8 +65,15 @@ Deno.serve(async (req)=>{
   用户输入的习惯描述：${habit.description}
   `;
 
+  // 记录大模型请求开始时间
+  const startTime = Date.now();
+  console.log(`[${new Date().toISOString()}] 开始调用大模型 API`);
+  
   const response = await openai.chat.completions.create({
-    model: "deepseek-chat",
+    model: "Pro/deepseek-ai/DeepSeek-V3",
+    response_format: {
+      "type": "json_object"
+    },
     messages: [
       {
         role: "system",
@@ -83,9 +86,14 @@ Deno.serve(async (req)=>{
     ]
   });
 
-  const result = response.choices[0].message.content;
-  const suggestions = JSON.parse(result);
+  // 记录大模型请求结束时间并计算耗时
+  const endTime = Date.now();
+  const duration = endTime - startTime;
+  console.log(`[${new Date().toISOString()}] 大模型 API 调用完成，耗时: ${duration}ms`);
 
+  const result = response.choices[0].message.content;
+  console.log(result);
+  const suggestions = JSON.parse(result);
   return new Response(JSON.stringify({
     suggestions: suggestions
   }), {
