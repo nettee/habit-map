@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import SelectBehaviors from "@/components/add-habit/SelectBehaviors"
+import SelectBehaviorsWithSuspense from "@/components/add-habit/SelectBehaviorsWithSuspense"
 import { useHabitWizard } from "../HabitWizardContext"
 
 export default function Step2Page() {
@@ -32,5 +32,5 @@ export default function Step2Page() {
     )
   }
 
-  return <SelectBehaviors />
+  return <SelectBehaviorsWithSuspense />
 }
