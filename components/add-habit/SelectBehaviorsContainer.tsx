@@ -1,8 +1,8 @@
 "use client"
 
-import { use, useEffect, useState } from "react"
+import { use, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { getBehaviorSuggestions } from "@/lib/behavior-suggestion"
+import { getBehaviorSuggestionsWithCache } from "@/lib/behavior-suggestion"
 import { useHabitWizard } from "@/app/habits/add/HabitWizardContext"
 import { useStepLayout } from "@/app/habits/add/StepLayoutContext"
 import SelectBehaviors from "./SelectBehaviors"
@@ -12,7 +12,7 @@ export default function SelectBehaviorsContainer() {
   const { setFixedContent } = useStepLayout()
   
   // 使用 use() hook 获取数据，会在数据未准备好时 suspend
-  const suggestions = use(getBehaviorSuggestions(habitBasicInfo))
+  const suggestions = use(getBehaviorSuggestionsWithCache(habitBasicInfo))
   
   // 设置固定内容（仅在数据加载完成后）
   useEffect(() => {

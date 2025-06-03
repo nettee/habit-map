@@ -3,6 +3,7 @@
 import { Component, ReactNode } from "react"
 import { Button } from "@/components/ui/button"
 import { AlertCircle, RotateCcw } from "lucide-react"
+import { clearBehaviorSuggestionsCache } from "@/lib/behavior-suggestion"
 
 interface Props {
   children: ReactNode
@@ -28,7 +29,8 @@ export default class SelectBehaviorsErrorBoundary extends Component<Props, State
   }
 
   handleRetry = () => {
-    // 重置错误状态，触发重新渲染
+    // 清除缓存并重置错误状态
+    clearBehaviorSuggestionsCache()
     this.setState({ hasError: false, error: null })
   }
 

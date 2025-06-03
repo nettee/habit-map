@@ -2,6 +2,9 @@ import { MicroBehavior, HabitBasicInfo } from "@/components/add-habit/types"
 
 const API_URL = '/api/behavior-suggestions'
 
+// 模块级别的 Promise 缓存
+const promiseCache = new Map<string, Promise<MicroBehavior[]>>()
+
 export interface BehaviorSuggestionRequest {
   habit: HabitBasicInfo
 }
@@ -51,4 +54,28 @@ export async function getBehaviorSuggestions(
     console.error('获取习惯建议失败:', error)
     throw error
   }
+}
+
+// 支持 Suspense 的缓存版本
+export function getBehaviorSuggestionsWithCache(habitBasicInfo: HabitBasicInfo): Promise<MicroBehavior[]> {
+  const cacheKey = `${habitBasicInfo.title}|${habitBasicInfo.description}`
+  
+  if (promiseCache.has(cacheKey)) {
+    return promiseCache.get(cacheKey)!
+  }
+  
+  const promise = getBehaviorSuggestions(habitBasicInfo)
+    .catch(error => {
+      // 失败时清除缓存，允许重试
+      promiseCache.delete(cacheKey)
+      throw error
+    })
+  
+  promiseCache.set(cacheKey, promise)
+  return promise
+}
+
+// 清除缓存的工具函数
+export function clearBehaviorSuggestionsCache() {
+  promiseCache.clear()
 }
