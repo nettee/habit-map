@@ -1,63 +1,13 @@
-import ProgressIndicator from "@/components/add-habit/ProgressIndicator";
-import NavigationFooter from "@/components/new-habit/NavigationFooter";
-import SetHabitInfo from "@/components/new-habit/SetHabitInfo";
 import { Toaster } from "@/components/ui/toaster";
-import { redirect } from "next/navigation";
+import NewHabitWizard from "./NewHabitWizard";
 
-const totalSteps = 3;
-
-const pageTitles: Record<number, string> = {
-    1: '定义你的习惯',
-    2: '选择微行为',
-    3: '设置提醒',
-}
-
-function Header({ currentStep, totalSteps }: { currentStep: number, totalSteps: number }) {
-    return (
-        <header className="flex-shrink-0 p-4 pb-0">
-            {/* 进度指示器：显示当前步骤进度 */}
-            <div className="mb-4">
-                <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
-            </div>
-
-            {/* 步骤信息和标题：动态显示当前步骤的信息 */}
-            <div className="text-center mb-6">
-                <p className="text-xs text-text-secondary mb-2">
-                    第 {currentStep} 步，共 {totalSteps} 步 · 设计新习惯
-                </p>
-                <h1 className="text-2xl font-bold text-text-primary">
-                    {pageTitles[currentStep]}
-                </h1>
-            </div>
-        </header>
-    )
-}
-
-export default async function NewHabitPage({ searchParams }: { searchParams: { step: string } }) {
-    const params = await searchParams;
-    
-    if (!params.step) {
-        redirect('/habits/new?step=1')
-    }
-    const currentStep = parseInt(params.step);
-    if (currentStep < 1 || currentStep > totalSteps) {
-        redirect('/habits/new?step=1')
-    }
+export default function NewHabitPage() {
 
     return (
         <div className="min-h-screen bg-surface-main">
             {/* 使用100dvh确保在移动端也能正确占满视口高度 */}
-            <div className="h-[100dvh] flex flex-col">
-                <div className="flex-1 min-h-0 flex flex-col">
-
-                    {/* 顶部进度指示器和标题 */}
-                    <Header currentStep={currentStep} totalSteps={totalSteps} />
-
-                    {/* 内容与底部导航区域 */}
-                    <div className="flex-1 min-h-0">
-                        <SetHabitInfo currentStep={currentStep} totalSteps={totalSteps} />
-                    </div>
-                </div>
+            <div className="h-[100dvh]">
+                <NewHabitWizard />
             </div>
 
             {/* 全局Toast通知组件 */}
