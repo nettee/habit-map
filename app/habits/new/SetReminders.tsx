@@ -2,10 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ArrowDown, ArrowUp, Link } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Clock } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollableContent } from "@/components/ScrollableContent";
+import { HabitData, Reminder } from "@/types/habit";
+import { Step3Data } from "./wizard-data";
 
 type Behavior = {
   title: string;
@@ -160,14 +162,30 @@ const useReminderSettings = (behaviors: Behavior[]) => {
   };
 }
 
-export default function SetReminders() {
+export default function SetReminders({
+  habitData,
+  reportStep3Data
+}: {
+  habitData: HabitData;
+  reportStep3Data: (data: Step3Data) => void;
+}) {
   const {
     reminderSettings,
     toggleCardExpanded,
     setReminderType,
     setReminderAnchor,
     setReminderTime,
-  } = useReminderSettings(mockSelectedMicroBehaviors);
+  } = useReminderSettings(habitData.behaviors);
+
+  // 当 reminderSettings 发生变化时，报告给父组件
+  useEffect(() => {
+    const reminders: Reminder[] = Object.values(reminderSettings).map(setting => ({
+      type: setting.type,
+      anchor: setting.anchor?.id,
+      time: setting.time,
+    }));
+    reportStep3Data({ reminders });
+  }, [reminderSettings, reportStep3Data]);
 
   const ReminderSettingTypeRadioGroup = ({ setting }: { setting: ReminderSetting }) => {
     const reminderOptions: {

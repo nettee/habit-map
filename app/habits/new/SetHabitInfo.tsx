@@ -3,42 +3,25 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { Step1Data } from "./wizard-data";
+import { useEffect, useState } from "react";
 
-export default function SetHabitInfo() {
-    const { toast } = useToast();
+export default function SetHabitInfo({
+    reportStep1Data
+}: {
+    reportStep1Data: (data: Step1Data) => void;
+}) {
+    const [habitTitle, setHabitTitle] = useState("");
+    const [habitDescription, setHabitDescription] = useState("");
 
-    const [habitTitle, setHabitTitle] = useState('');
-    const [habitDescription, setHabitDescription] = useState('');
-
-    const onSubmit = () => {
-        if (habitTitle.length === 0) {
-            toast({
-                description: '请输入习惯内容',
-                variant: 'destructive',
-            });
-            return;
-        }
-        if (habitTitle.length > 30) {
-            toast({
-                description: '习惯内容不能超过30个字符',
-                variant: 'destructive',
-            });
-            return;
-        }
-        if (habitDescription.length > 200) {
-            toast({
-                description: '习惯说明不能超过200个字符',
-                variant: 'destructive',
-            });
-            return;
-        }
-        console.log('habit info:', {
-            title: habitTitle,
-            description: habitDescription,
-        });
-    }
+    // 当 habitTitle 或 habitDescription 发生变化时，报告给父组件
+    useEffect(() => {
+        const step1Data: Step1Data = {
+            habitTitle,
+            habitDescription,
+        };
+        reportStep1Data(step1Data);
+    }, [habitTitle, habitDescription, reportStep1Data]);
 
     return (
         <div className="h-full flex flex-col">

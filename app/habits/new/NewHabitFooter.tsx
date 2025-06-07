@@ -9,22 +9,18 @@ export default function NewHabitFooter({
     isLastStep,
     onPrev,
     onNext,
-    onCancel,
-    onSubmit,
 }: {
     isFirstStep: boolean;
     isLastStep: boolean;
     onPrev: () => void;
     onNext: () => void;
-    onCancel: () => void;
-    onSubmit: () => void;
 }) {
     return (
         <footer className="flex justify-between p-4 border-t border-surface-divider">
             {/* 左侧按钮：取消或返回上一步 */}
             <Button
                 variant="ghost"
-                onClick={isFirstStep ? onCancel : onPrev}
+                onClick={onPrev}
                 className="text-text-secondary"
             >
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -33,7 +29,7 @@ export default function NewHabitFooter({
 
             {/* 右侧按钮：下一步或完成 */}
             <Button
-                onClick={isLastStep ? onSubmit : onNext}
+                onClick={onNext}
                 className="bg-brand-primary hover:bg-brand-primary/80 text-white"
             >
                 {isLastStep ? '完成' : '下一步'}

@@ -1,8 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { ScrollableContent } from "@/components/ScrollableContent"
+import { Step2Data } from "./wizard-data"
+import { HabitData } from "@/types/habit"
 
 interface BehaviorCandidate {
     id: string;
@@ -76,13 +78,30 @@ const mockBehaviorCandidates: BehaviorCandidate[] = [
 
 const selectedCountLimit = 3;
 
-export default function SelectBehaviors() {
-    const [selectedBehaviors, setSelectedBehaviors] = useState<BehaviorCandidate[]>(mockBehaviorCandidates);
+export default function SelectBehaviors({
+    habitData,
+    reportStep2Data
+}: {
+    habitData: HabitData;
+    reportStep2Data: (data: Step2Data) => void;
+}) {
+    const [behaviorCandidates, setBehaviorCandidates] = useState<BehaviorCandidate[]>(mockBehaviorCandidates);
     const [selectedCount, setSelectedCount] = useState(0);
+
+    // 当 behaviorCandidates 发生变化时，报告给父组件
+    useEffect(() => {
+        const behaviors = behaviorCandidates
+            .filter(b => b.selected)
+            .map(b => ({
+                title: b.title,
+                description: b.description,
+            }));
+        reportStep2Data({ behaviors });
+    }, [behaviorCandidates, reportStep2Data]);
 
     const handleBehaviorToggle = (behavior: BehaviorCandidate) => {
         const newSelected = !behavior.selected;
-        setSelectedBehaviors(prev => prev.map(b =>
+        setBehaviorCandidates(prev => prev.map(b =>
             b.id === behavior.id ? { ...b, selected: newSelected } : b
         ));
         setSelectedCount(prev => newSelected ? prev + 1 : prev - 1);
@@ -91,27 +110,27 @@ export default function SelectBehaviors() {
     const habitCard = (
         <Card className="border-surface-divider bg-surface-main">
             <CardContent className="p-4">
-                <p className="text-sm text-text-secondary">习惯：</p>
-                <p className="font-medium text-text-primary">喝水</p>
+                <p className="text-sm text-text-secondary">我想养成的习惯是：</p>
+                <p className="font-medium text-text-primary">{habitData.title}</p>
             </CardContent>
         </Card>
     )
 
     const behaviorCandidateTitle = (
         <div>
-                <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-medium text-text-primary">推荐的微行为</h3>
-                    <span className="text-sm text-text-secondary">
-                        已选择 {selectedCount}/{selectedCountLimit}
-                    </span>
-                </div>
-                <p className="text-sm text-text-secondary">选择1-{selectedCountLimit}个简单易行的微行为，让习惯更容易坚持</p>
+            <div className="flex justify-between items-center mb-2">
+                <h3 className="font-medium text-text-primary">推荐的微行为</h3>
+                <span className="text-sm text-text-secondary">
+                    已选择 {selectedCount}/{selectedCountLimit}
+                </span>
             </div>
+            <p className="text-sm text-text-secondary">选择1-{selectedCountLimit}个简单易行的微行为，让习惯更容易坚持</p>
+        </div>
     )
 
     const behaviorCandidateContent = (
         <div className="py-2 space-y-3">
-            {selectedBehaviors.map((behavior) => (
+            {behaviorCandidates.map((behavior) => (
                 <Card key={behavior.id} className="border-surface-divider">
                     <CardContent
                         className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
