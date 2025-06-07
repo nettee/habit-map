@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import { ScrollableContent } from "@/components/ScrollableContent"
 
 interface BehaviorCandidate {
     id: string;
@@ -74,29 +75,6 @@ const mockBehaviorCandidates: BehaviorCandidate[] = [
 ];
 
 const selectedCountLimit = 3;
-
-function ScrollableContent({ children }: { children: React.ReactNode }) {
-    return (
-        // 最外层容器：占据父容器的完整高度，建立flex布局
-        // h-full: 继承父容器的100%高度
-        // flex flex-col: 垂直方向的flex布局，为内部滚动区域提供高度基础
-        <div className="h-full flex flex-col">
-            {/* 滚动区域容器：负责建立滚动上下文 */}
-            {/* flex-1: 占据剩余的所有可用空间 */}
-            {/* relative: 为绝对定位的子元素提供定位参考 */}
-            {/* min-h-0: 重要！允许flex子项收缩到内容高度以下，这是实现滚动的关键 */}
-            <div className="flex-1 relative min-h-0">
-                {/* 实际的滚动容器：这里是滚动的核心实现 */}
-                {/* h-full: 占据父容器的100%高度（这里是flex-1分配的空间） */}
-                {/* overflow-y-auto: 垂直方向内容超出时显示滚动条，否则隐藏 */}
-                {/* scrollbar-hide: 自定义类，隐藏滚动条但保持滚动功能 */}
-                <div className="h-full overflow-y-auto scrollbar-hide">
-                    {children}
-                </div>
-            </div>
-        </div>
-    )
-}
 
 export default function SelectBehaviors() {
     const [selectedBehaviors, setSelectedBehaviors] = useState<BehaviorCandidate[]>(mockBehaviorCandidates);
