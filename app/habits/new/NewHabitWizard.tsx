@@ -9,6 +9,7 @@ import SetReminders from "./Step3SetReminders";
 import { useToast } from "@/hooks/use-toast";
 import { Step1Data, Step2Data, Step3Data } from "./wizard-data";
 import { HabitData } from "@/types/habit";
+import { createHabit } from "@/lib/habit";
 
 const totalSteps = 3;
 
@@ -160,6 +161,15 @@ export default function NewHabitWizard() {
         });
     }
 
+    const cancel = () => {
+        // TODO
+    }
+
+    const submit = async () => {
+        const habit = await createHabit(habitData);
+        console.log('habit created:', habit);
+    }
+
     const prev = () => {
         toPrevStep();
         // TODO
@@ -187,18 +197,10 @@ export default function NewHabitWizard() {
         if (currentStep < 3) {
             toNextStep();
         } else {
-            // TODO
-            console.log('ready to submit, habitData:', habitData);
+            submit();
         }
     }
 
-    const cancel = () => {
-        // TODO
-    }
-
-    const submit = () => {
-        // TODO
-    }
 
     return (
         <div className="h-full flex flex-col">
