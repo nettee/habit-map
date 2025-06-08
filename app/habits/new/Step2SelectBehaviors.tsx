@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { ScrollableContent } from "@/components/ScrollableContent"
+import { ScrollableContent } from "@/components/scrollable-content"
 import { Step2Data } from "./wizard-data"
 import { HabitData } from "@/types/habit"
 

@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUp, Link } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Clock } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollableContent } from "@/components/ScrollableContent";
+import { ScrollableContent } from "@/components/scrollable-content";
 import { HabitData, Reminder } from "@/types/habit";
 import { Step3Data } from "./wizard-data";
 

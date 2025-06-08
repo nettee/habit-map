@@ -2,10 +2,10 @@
 
 import NewHabitFooter from "@/app/habits/new/NewHabitFooter";
 import NewHabitHeader from "@/app/habits/new/NewHabitHeader";
-import SetHabitInfo from "@/app/habits/new/SetHabitInfo";
+import SetHabitInfo from "@/app/habits/new/Step1SetHabitInfo";
 import { useState } from "react";
-import SelectBehaviors from "./SelectBehaviors";
-import SetReminders from "./SetReminders";
+import SelectBehaviors from "./Step2SelectBehaviors";
+import SetReminders from "./Step3SetReminders";
 import { useToast } from "@/hooks/use-toast";
 import { Step1Data, Step2Data, Step3Data } from "./wizard-data";
 import { HabitData } from "@/types/habit";

@@ -1,9 +1,5 @@
 import React from "react";
 
-interface ScrollableContentProps {
-  children: React.ReactNode;
-}
-
 /**
  * 通用滚动容器组件
  * 
@@ -14,7 +10,7 @@ interface ScrollableContentProps {
  * - 隐藏滚动条样式但保持滚动功能
  * - 支持 flex 布局
  */
-export function ScrollableContent({ children }: ScrollableContentProps) {
+export function ScrollableContent({ children }: { children: React.ReactNode }) {
   return (
     // 最外层容器：占据父容器的完整高度，建立flex布局
     // h-full: 继承父容器的100%高度
