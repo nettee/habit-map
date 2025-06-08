@@ -5,11 +5,12 @@ import { Target, Sparkles } from "lucide-react"
 import { getHabit, HabitWithId } from "@/lib/habit"
 import { useEffect, useState } from "react"
 
-interface HabitDetailsCardProps {
-  habitId: string
-}
-
-export default function HabitDetailsCard({ habitId }: HabitDetailsCardProps) {
+export default function HabitDetail({
+  habitId,
+}: { 
+  habitId: string 
+}) {
+    
   const [habitData, setHabitData] = useState<HabitWithId | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

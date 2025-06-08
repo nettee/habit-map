@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Check, Sparkles, Heart } from "lucide-react"
-import HabitDetailsCard from "./HabitDetailsCard"
+import HabitDetail from "./HabitDetail"
 
 export default async function CompletePage({
   searchParams,
@@ -46,7 +46,7 @@ export default async function CompletePage({
         </div>
 
         {/* 动态的习惯信息和微行为计划卡片 */}
-        <HabitDetailsCard habitId={habitId} />
+        <HabitDetail habitId={habitId} />
 
         {/* 鼓励文案 */}
         <Card className="border-brand-accent bg-gradient-to-r from-brand-accent/10 to-brand-primary/10 mb-6">
