@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Step1Data, Step2Data, Step3Data } from "./wizard-data";
 import { HabitData } from "@/types/habit";
 import { createHabit } from "@/lib/habit";
+import { useRouter } from "next/navigation";
 
 const totalSteps = 3;
 
@@ -44,6 +45,7 @@ function useStep() {
 
 export default function NewHabitWizard() {
     const { toast } = useToast();
+    const router = useRouter();
     const { currentStep, isFirstStep, isLastStep, toPrevStep, toNextStep } = useStep();
 
     const [habitData, setHabitData] = useState<HabitData>({
@@ -168,6 +170,7 @@ export default function NewHabitWizard() {
     const submit = async () => {
         const habit = await createHabit(habitData);
         console.log('habit created:', habit);
+        router.push(`/habits/new/complete?id=${habit.id}`);
     }
 
     const prev = () => {
