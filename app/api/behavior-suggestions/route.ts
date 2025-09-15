@@ -105,6 +105,8 @@ export async function POST(request: NextRequest) {
           })
         })
 
+        console.log(`[${new Date().toISOString()}] LLM API 响应: status=${response.status}, content-type=${response.headers.get('content-type')}`)
+
         if (!response.ok) {
           const errorText = await response.text()
           console.error('LLM API 请求失败:', response.status, errorText)
@@ -127,6 +129,7 @@ export async function POST(request: NextRequest) {
         const decoder = new TextDecoder()
         let buffer = '' // 存储未完成的数据
         let behaviorCount = 0
+        const preview = (s: string, n = 160) => s.replace(/\n/g, '\\n').slice(0, n)
         
         try {
           while (true) {
@@ -141,6 +144,7 @@ export async function POST(request: NextRequest) {
 
             // 解析SSE数据
             const chunk = decoder.decode(value, { stream: true })
+            console.log(`[${new Date().toISOString()}] [SSE] 收到chunk: bytes=${value?.byteLength ?? 'n/a'}, textLen=${chunk.length}, preview="${preview(chunk)}"`)
             const lines = chunk.split('\n')
             
             for (const line of lines) {
@@ -148,14 +152,17 @@ export async function POST(request: NextRequest) {
                 const data = line.slice(6)
                 
                 if (data === '[DONE]') {
+                  console.log(`[${new Date().toISOString()}] [SSE] 收到 [DONE] 标记`)
                   continue
                 }
                 
                 try {
+                  console.log(`[${new Date().toISOString()}] [SSE] data行长度=${data.length}, preview="${preview(data)}"`)
                   const parsed = JSON.parse(data)
                   const content = parsed.choices?.[0]?.delta?.content || ''
                   
                   if (content) {
+                    console.log(`[${new Date().toISOString()}] [SSE] 追加content长度=${content.length}, preview="${preview(content)}"`)
                     buffer += content
                     
                     // 尝试解析完整的behavior标签
@@ -186,11 +193,13 @@ export async function POST(request: NextRequest) {
                     
                     // 保留未匹配的部分到buffer中
                     if (lastIndex > 0) {
+                      console.log(`[${new Date().toISOString()}] [SSE] 已消费buffer至索引 ${lastIndex}，剩余长度=${buffer.length - lastIndex}`)
                       buffer = buffer.substring(lastIndex)
                     }
                   }
                 } catch (parseError) {
-                  console.warn('解析chunk失败:', parseError)
+                  console.warn(`[${new Date().toISOString()}] [SSE] 解析chunk失败:`, parseError)
+                  console.warn(`[${new Date().toISOString()}] [SSE] 原始data预览: "${preview(line)}"`)
                   // 继续处理，不中断流
                 }
               }
