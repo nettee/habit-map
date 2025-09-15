@@ -127,8 +127,9 @@ export async function POST(request: NextRequest) {
         // 处理流式响应
         const reader = response.body.getReader()
         const decoder = new TextDecoder()
-        let buffer = '' // 存储未完成的数据
+        let buffer = '' // 存储未完成的XML片段
         let behaviorCount = 0
+        let sseBuffer = '' // 累积未结束的SSE行，避免分片导致JSON不完整
         const preview = (s: string, n = 160) => s.replace(/\n/g, '\\n').slice(0, n)
         
         try {
@@ -142,66 +143,74 @@ export async function POST(request: NextRequest) {
               break
             }
 
-            // 解析SSE数据
+            // 解析SSE数据（带行级缓冲，避免半截JSON）
             const chunk = decoder.decode(value, { stream: true })
             console.log(`[${new Date().toISOString()}] [SSE] 收到chunk: bytes=${value?.byteLength ?? 'n/a'}, textLen=${chunk.length}, preview="${preview(chunk)}"`)
-            const lines = chunk.split('\n')
-            
+            sseBuffer += chunk
+            const lines = sseBuffer.split('\n')
+            sseBuffer = lines.pop() || '' // 保留未结束的最后一行
+
             for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const data = line.slice(6)
-                
-                if (data === '[DONE]') {
-                  console.log(`[${new Date().toISOString()}] [SSE] 收到 [DONE] 标记`)
-                  continue
-                }
-                
-                try {
-                  console.log(`[${new Date().toISOString()}] [SSE] data行长度=${data.length}, preview="${preview(data)}"`)
-                  const parsed = JSON.parse(data)
-                  const content = parsed.choices?.[0]?.delta?.content || ''
-                  
-                  if (content) {
-                    console.log(`[${new Date().toISOString()}] [SSE] 追加content长度=${content.length}, preview="${preview(content)}"`)
-                    buffer += content
-                    
-                    // 尝试解析完整的behavior标签
-                    const behaviorRegex = /<behavior>\s*<title>([\s\S]*?)<\/title>\s*<description>([\s\S]*?)<\/description>\s*<\/behavior>/gi
-                    let match
-                    let lastIndex = 0
-                    
-                    while ((match = behaviorRegex.exec(buffer)) !== null) {
-                      const title = match[1]?.trim()
-                      const description = match[2]?.trim()
-                      
-                      if (title && description) {
-                        behaviorCount++
-                        console.log(`解析到第 ${behaviorCount} 个建议: ${title}`)
-                        
-                        // 立即发送这个建议
-                        sendSSEData({
-                          type: 'suggestion',
-                          data: {
-                            title: title,
-                            description: description
-                          }
-                        })
-                        
-                        lastIndex = match.index + match[0].length
-                      }
-                    }
-                    
-                    // 保留未匹配的部分到buffer中
-                    if (lastIndex > 0) {
-                      console.log(`[${new Date().toISOString()}] [SSE] 已消费buffer至索引 ${lastIndex}，剩余长度=${buffer.length - lastIndex}`)
-                      buffer = buffer.substring(lastIndex)
+              // 只处理以 data: 开头的行；兼容有无空格
+              if (!line.startsWith('data:')) continue
+              const afterColon = line.slice(5)
+              const data = (afterColon.startsWith(' ') ? afterColon.slice(1) : afterColon).trim()
+
+              if (!data) {
+                // 空data行，多为分片或心跳
+                console.log(`[${new Date().toISOString()}] [SSE] 空的 data 行，跳过`)
+                continue
+              }
+              if (data === '[DONE]') {
+                console.log(`[${new Date().toISOString()}] [SSE] 收到 [DONE] 标记`)
+                continue
+              }
+
+              try {
+                console.log(`[${new Date().toISOString()}] [SSE] data行长度=${data.length}, preview="${preview(data)}"`)
+                const parsed = JSON.parse(data)
+                const content = parsed.choices?.[0]?.delta?.content || ''
+
+                if (content) {
+                  console.log(`[${new Date().toISOString()}] [SSE] 追加content长度=${content.length}, preview="${preview(content)}"`)
+                  buffer += content
+
+                  // 尝试解析完整的behavior标签
+                  const behaviorRegex = /<behavior>\s*<title>([\s\S]*?)<\/title>\s*<description>([\s\S]*?)<\/description>\s*<\/behavior>/gi
+                  let match
+                  let lastIndex = 0
+
+                  while ((match = behaviorRegex.exec(buffer)) !== null) {
+                    const title = match[1]?.trim()
+                    const description = match[2]?.trim()
+
+                    if (title && description) {
+                      behaviorCount++
+                      console.log(`解析到第 ${behaviorCount} 个建议: ${title}`)
+
+                      // 立即发送这个建议
+                      sendSSEData({
+                        type: 'suggestion',
+                        data: {
+                          title: title,
+                          description: description
+                        }
+                      })
+
+                      lastIndex = match.index + match[0].length
                     }
                   }
-                } catch (parseError) {
-                  console.warn(`[${new Date().toISOString()}] [SSE] 解析chunk失败:`, parseError)
-                  console.warn(`[${new Date().toISOString()}] [SSE] 原始data预览: "${preview(line)}"`)
-                  // 继续处理，不中断流
+
+                  // 保留未匹配的部分到buffer中
+                  if (lastIndex > 0) {
+                    console.log(`[${new Date().toISOString()}] [SSE] 已消费buffer至索引 ${lastIndex}，剩余长度=${buffer.length - lastIndex}`)
+                    buffer = buffer.substring(lastIndex)
+                  }
                 }
+              } catch (parseError) {
+                console.warn(`[${new Date().toISOString()}] [SSE] 解析chunk失败:`, parseError)
+                console.warn(`[${new Date().toISOString()}] [SSE] 原始data预览: "${preview(line)}"`)
+                // 继续处理，不中断流
               }
             }
           }
