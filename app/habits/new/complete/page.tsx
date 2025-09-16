@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Check, Sparkles, Heart } from "lucide-react"
+import { Check, Heart, Sparkles } from "lucide-react"
+import Link from "next/link"
 import HabitDetail from "./HabitDetail"
 
 export default async function CompletePage({
@@ -14,8 +15,8 @@ export default async function CompletePage({
   // 如果没有 habitId，显示错误状态
   if (!habitId) {
     return (
-      <div className="min-h-screen bg-surface-main p-4">
-        <div className="max-w-md mx-auto text-center">
+      <div className="min-h-screen bg-surface-main p-4 flex items-center justify-center">
+        <div className="max-w-md w-full text-center">
           <h1 className="text-xl font-bold text-text-primary mb-4">出错了</h1>
           <p className="text-text-secondary">找不到习惯ID，请检查URL是否正确</p>
         </div>
@@ -24,8 +25,9 @@ export default async function CompletePage({
   }
 
   return (
-    <div className="min-h-screen bg-surface-main p-4">
-      <div className="max-w-md mx-auto">
+    <div className="min-h-screen bg-surface-main overflow-y-auto">
+      <div className="min-h-screen p-4 flex items-center justify-center">
+        <div className="max-w-md w-full py-8">
         {/* 成功标识 */}
         <div className="text-center mb-6">
           <div className="relative mx-auto w-16 h-16 mb-4">
@@ -38,7 +40,7 @@ export default async function CompletePage({
           </div>
 
           <h1 className="text-xl font-bold text-text-primary mb-1">🎉 太棒了！</h1>
-          <p className="text-text-secondary mb-1">你的新习惯已经创建成功</p>
+          <p className="text-text-secondary mb-1">你的新习惯已经设计成功</p>
           <p className="text-sm text-brand-secondary flex items-center justify-center">
             <Heart className="w-4 h-4 mr-1" />
             每一个小行动都是改变的开始
@@ -58,16 +60,24 @@ export default async function CompletePage({
           </CardContent>
         </Card>
 
+        {/* 返回主页（临时） */}
+        <Button asChild className="w-full bg-brand-primary hover:bg-brand-primary/80 text-white py-2 text-lg font-medium">
+          <Link href="/">
+            返回主页
+          </Link>
+        </Button>
+
         {/* 完成按钮 */}
-        <Button
+        {/* <Button
           // onClick={handleComplete}
           className="w-full bg-brand-primary hover:bg-brand-primary/80 text-white py-2 text-lg font-medium"
         >
           开始我的习惯之旅 🚀
-        </Button>
+        </Button> */}
 
         {/* 底部提示 */}
-        <p className="text-center text-xs text-text-secondary mt-4">你可以随时在习惯列表中查看和调整你的微行为</p>
+        {/* <p className="text-center text-xs text-text-secondary mt-4">你可以随时在习惯列表中查看和调整你的微行为</p> */}
+        </div>
       </div>
     </div>
   )

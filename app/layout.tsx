@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { QueryProvider } from '@/components/query-provider'
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: 'Habit MAP',
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body>
         <QueryProvider>{children}</QueryProvider>
+        <Analytics />
       </body>
     </html>
   )

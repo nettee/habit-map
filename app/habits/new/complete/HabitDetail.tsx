@@ -91,10 +91,10 @@ export default function HabitDetail({
                 <h4 className="font-medium text-text-primary mb-1 text-sm">{behavior.title}</h4>
                 <p className="text-xs text-text-secondary mb-1.5">{behavior.description}</p>
 
-                <div className="flex items-center text-xs">
+                {/* <div className="flex items-center text-xs">
                   <span className="text-text-secondary mr-1.5">📅 提醒方式:</span>
                   <span className="text-brand-primary font-medium">{behavior.reminder?.anchor}</span>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
